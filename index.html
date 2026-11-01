@@ -275,8 +275,8 @@
     const CONFIG = {
       recipientName: "Josiya",
       specialDate: "03.04.2026",
-      particleCount: 33000,
-      starCount: 2600,
+      particleCount: 35000, // 35,000 ta boy va qalin zarrachalar
+      starCount: 2800,
       audioUrl: ""
     };
 
@@ -382,8 +382,8 @@
 
       const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
       g.addColorStop(0, "rgba(255, 255, 255, 1)");
-      g.addColorStop(0.22, "rgba(255, 225, 240, 0.95)");
-      g.addColorStop(0.5, "rgba(255, 30, 100, 0.45)");
+      g.addColorStop(0.2, "rgba(255, 230, 245, 0.95)");
+      g.addColorStop(0.5, "rgba(255, 30, 110, 0.45)");
       g.addColorStop(0.8, "rgba(140, 20, 220, 0.12)");
       g.addColorStop(1, "rgba(0, 0, 0, 0)");
 
@@ -407,9 +407,9 @@
 
       for (let i = 0; i < CONFIG.starCount; i++) {
         const i3 = i * 3;
-        pos[i3] = (Math.random() - 0.5) * 2800;
-        pos[i3 + 1] = (Math.random() - 0.5) * 2800;
-        pos[i3 + 2] = (Math.random() - 0.5) * 2400 - 450;
+        pos[i3] = (Math.random() - 0.5) * 3000;
+        pos[i3 + 1] = (Math.random() - 0.5) * 3000;
+        pos[i3 + 2] = (Math.random() - 0.5) * 2600 - 450;
 
         const rand = Math.random();
         let c = (rand < 0.6) ? new THREE.Color(0xffffff) : (rand < 0.85 ? new THREE.Color(0xff75a8) : new THREE.Color(0xa855f7));
@@ -451,6 +451,12 @@
     const velocities = new Float32Array(N * 3);
     const delays = new Float32Array(N);
 
+    // Vorteks uchun individual aylanish radiusi, burchagi va tezliklari
+    const vortexRadii = new Float32Array(N);
+    const vortexAngles = new Float32Array(N);
+    const vortexSpeeds = new Float32Array(N);
+    const vortexHeights = new Float32Array(N);
+
     for (let i = 0; i < N; i++) {
       delays[i] = Math.random() * 0.32;
     }
@@ -486,10 +492,9 @@
       let idx = 0;
 
       // 1. "03.04.2026" SANASI - "Sen uchun" matnining AYNAN YUQORISIDA!
-      // Mayda, nafis, yorqin neon nuqtachalardan iborat (3,500 zarracha)
       const datePoints = getCanvasPoints(CONFIG.specialDate, 44, 460, 80);
-      const dateCount = 3500;
-      const dateCenterY = 195; // "Sen uchun" (130) ning tepasida
+      const dateCount = 3600;
+      const dateCenterY = 195;
 
       for (let i = 0; i < dateCount && idx < N; i++, idx++) {
         const i3 = idx * 3;
@@ -498,18 +503,17 @@
         pos[i3 + 1] = p.y + dateCenterY + (Math.random() - 0.5) * 1.2;
         pos[i3 + 2] = (Math.random() - 0.5) * 4;
 
-        // Mayda yaltirab turuvchi oltin-oq va pushti nuqtachalar
         const isCore = Math.random() < 0.65;
         if (isCore) {
-          col[i3] = 1.0; col[i3 + 1] = 0.92; col[i3 + 2] = 0.95; // Yorqin oq jilo
+          col[i3] = 1.0; col[i3 + 1] = 0.92; col[i3 + 2] = 0.95;
         } else {
-          col[i3] = 1.0; col[i3 + 1] = 0.45; col[i3 + 2] = 0.75; // Nafis pushti
+          col[i3] = 1.0; col[i3 + 1] = 0.45; col[i3 + 2] = 0.75;
         }
       }
 
-      // 2. "Sen uchun" matni (7,000 zarracha)
+      // 2. "Sen uchun" matni (7,200 zarracha)
       const textPoints = getCanvasPoints("Sen uchun", 68, 440, 130);
-      const textCount = 7000;
+      const textCount = 7200;
       for (let i = 0; i < textCount && idx < N; i++, idx++) {
         const i3 = idx * 3;
         const p = textPoints[i % textPoints.length];
@@ -523,8 +527,8 @@
         col[i3 + 2] = isCore ? 0.98 : 0.75;
       }
 
-      // 3. "Sen uchun" yozuvi yonidagi porloq Qizil Yurakcha Ikonkasi (❤️) (3,800 zarracha)
-      const topHeartCount = 3800;
+      // 3. "Sen uchun" yozuvi yonidagi porloq Qizil Yurakcha Ikonkasi (❤️) (4,000 zarracha)
+      const topHeartCount = 4000;
       for (let i = 0; i < topHeartCount && idx < N; i++, idx++) {
         const i3 = idx * 3;
         const t = Math.random() * Math.PI * 2;
@@ -542,9 +546,9 @@
         col[i3 + 2] = 0.2;
       }
 
-      // 4. Konvert ramkasi va qopqog'i (5,500 zarracha)
+      // 4. Konvert ramkasi va qopqog'i (5,600 zarracha)
       const envW = 290, envH = 185;
-      const borderCount = 5500;
+      const borderCount = 5600;
       for (let i = 0; i < borderCount && idx < N; i++, idx++) {
         const i3 = idx * 3;
         const r = Math.random();
@@ -569,8 +573,8 @@
         col[i3] = 0.98; col[i3 + 1] = 0.2; col[i3 + 2] = 0.68;
       }
 
-      // 5. Konvert markazidagi 3D Qizil Yurakcha Muhr (5,800 zarracha)
-      const sealCount = 5800;
+      // 5. Konvert markazidagi 3D Qizil Yurakcha Muhr (6,000 zarracha)
+      const sealCount = 6000;
       for (let i = 0; i < sealCount && idx < N; i++, idx++) {
         const i3 = idx * 3;
         const t = Math.random() * Math.PI * 2;
@@ -586,7 +590,7 @@
         col[i3] = 0.96; col[i3 + 1] = 0.04; col[i3 + 2] = 0.16;
       }
 
-      // 6. BUTUN EKRAN BO'YLAB SOCHILGAN KOSMIK NUR VA YULDUZLAR (Qolgan 7,400+ zarracha)
+      // 6. BUTUN EKRAN BO'YLAB SOCHILGAN KOSMIK NUR VA YULDUZLAR (Qolgan 8,600+ zarracha)
       while (idx < N) {
         const i3 = idx * 3;
         const sub = Math.random();
@@ -624,37 +628,168 @@
 
     /**
      * ========================================================
-     * 2-BOSQICH: GALAKTIKA VORTEKSI
+     * 2-BOSQICH: HAQIQIY GIGANT 3D KOSMIK GALAKTIKA VORTEKSI
+     * (Supermassive Galactic Core + Accretion Disk + Cosmic Jets)
      * ========================================================
      */
     function createVortexStage() {
       const pos = new Float32Array(N * 3);
       const col = new Float32Array(N * 3);
-      const arms = 4;
-      const maxR = 410;
+      let idx = 0;
 
-      for (let i = 0; i < N; i++) {
-        const i3 = i * 3;
-        const arm = i % arms;
-        const armAngle = (arm * Math.PI * 2) / arms;
+      // 1. MARKAZIY O'TA YORQIN YADRO (Supermassive Core / Quasar Bulge) - 6,500 zarracha
+      // Zich, qizigan oq-oltin va elektr ko'k plazma shari
+      const coreCount = 6500;
+      for (let i = 0; i < coreCount && idx < N; i++, idx++) {
+        const i3 = idx * 3;
+        const u = Math.random();
+        const r = Math.pow(u, 1.8) * 55; // Markazda o'ta zich
+        const theta = Math.random() * Math.PI * 2;
+        const phi = (Math.random() - 0.5) * Math.PI * 0.7;
 
-        const p = Math.pow(Math.random(), 1.45);
-        const r = p * maxR;
-        const angle = r * 0.038 + armAngle;
-        const spread = (Math.random() - 0.5) * (22 + r * 0.18);
+        const x = r * Math.cos(theta) * Math.cos(phi);
+        const y = r * Math.sin(theta) * Math.cos(phi) * 0.75;
+        const z = r * Math.sin(phi) * 0.65;
 
-        pos[i3] = Math.cos(angle) * r + Math.sin(angle) * spread;
-        pos[i3 + 1] = (Math.sin(angle) * r - Math.cos(angle) * spread) * 0.75;
-        pos[i3 + 2] = -Math.cos(p * Math.PI) * 85 + (Math.random() - 0.5) * (18 + r * 0.15);
+        pos[i3] = x;
+        pos[i3 + 1] = y;
+        pos[i3 + 2] = z;
 
-        if (r < 48) {
-          col[i3] = 1.0; col[i3 + 1] = 0.92; col[i3 + 2] = 0.75;
-        } else if (r < 190) {
-          col[i3] = 1.0; col[i3 + 1] = 0.12; col[i3 + 2] = 0.48;
+        // Individual vorteks aylanish parametrlari
+        vortexRadii[idx] = Math.sqrt(x * x + y * y);
+        vortexAngles[idx] = Math.atan2(y, x);
+        vortexSpeeds[idx] = (1.8 + Math.random() * 0.6); // Markaz juda tez aylanadi
+        vortexHeights[idx] = z;
+
+        // Rang: markaz oq-oltin nurdan elektr ko'k-fuxsiyaga
+        const distRatio = r / 55;
+        if (distRatio < 0.35) {
+          col[i3] = 1.0; col[i3 + 1] = 0.98; col[i3 + 2] = 0.95; // Yorqin oq markaz
+        } else if (distRatio < 0.7) {
+          col[i3] = 1.0; col[i3 + 1] = 0.85; col[i3 + 2] = 0.35; // Oltin jilo
         } else {
-          col[i3] = 0.58; col[i3 + 1] = 0.12; col[i3 + 2] = 0.95;
+          col[i3] = 0.3; col[i3 + 1] = 0.85; col[i3 + 2] = 1.0;  // Elektr moviy plazma
         }
       }
+
+      // 2. KOSMIK QUTBIY OQIMLAR (Relativistic Polar Jets) - 3,500 zarracha
+      // Markazdan yuqoriga (+Z) va pastga (-Z) otilib chiquvchi yorqin nurlar konusi
+      const jetCount = 3500;
+      for (let i = 0; i < jetCount && idx < N; i++, idx++) {
+        const i3 = idx * 3;
+        const dir = (Math.random() < 0.5 ? 1 : -1);
+        const h = Math.pow(Math.random(), 1.4) * 220; // Jet balandligi
+        const spreadR = (h * 0.22) * Math.sqrt(Math.random());
+        const jetAngle = Math.random() * Math.PI * 2;
+
+        const x = Math.cos(jetAngle) * spreadR;
+        const y = Math.sin(jetAngle) * spreadR * 0.8;
+        const z = dir * (h + 10);
+
+        pos[i3] = x;
+        pos[i3 + 1] = y;
+        pos[i3 + 2] = z;
+
+        vortexRadii[idx] = Math.sqrt(x * x + y * y);
+        vortexAngles[idx] = jetAngle;
+        vortexSpeeds[idx] = 1.2;
+        vortexHeights[idx] = z;
+
+        // Elektr neon moviy va oq nur
+        col[i3] = 0.4 + Math.random() * 0.6;
+        col[i3 + 1] = 0.8 + Math.random() * 0.2;
+        col[i3 + 2] = 1.0;
+      }
+
+      // 3. 3D QALIN SPIRAL TARMOQLAR (Dense Logarithmic Spiral Arms) - 18,000 zarracha
+      // Ingichka chiziq emas! Haqiqiy galaktika gaz va yulduz bulutlari (nebula dust)
+      const armParticles = 18000;
+      const numArms = 2; // 2 ta dominant yirik spiral qo'l (Sombrero/Andromeda kabi)
+      const maxGalaxyR = 430;
+
+      for (let i = 0; i < armParticles && idx < N; i++, idx++) {
+        const i3 = idx * 3;
+        const armIdx = i % numArms;
+        const armBaseAngle = (armIdx * Math.PI * 2) / numArms;
+
+        // Logarifmik spiral radiusi
+        const p = Math.pow(Math.random(), 1.35);
+        const r = 40 + p * (maxGalaxyR - 40);
+
+        // Spiral burilish burchagi (markazdan qirragacha silliq o'raladi)
+        const spiralAngle = Math.log(r / 35) * 2.8 + armBaseAngle;
+
+        // Kenglik tarqalishi: markazdan uzoqlashgan sari spiral kengayadi (Astrophysical Arm Width)
+        const armWidth = 22 + (r * 0.16);
+        const normalOffset = (Math.random() - 0.5 + (Math.random() - 0.5)) * armWidth; // Gaussian-like spread
+
+        const tangentAngle = spiralAngle + Math.PI * 0.5;
+        let x = Math.cos(spiralAngle) * r + Math.cos(tangentAngle) * normalOffset;
+        let y = Math.sin(spiralAngle) * r + Math.sin(tangentAngle) * normalOffset;
+
+        // 3D qalinlik va egri disk effekti (Galactic Vertical Thickness & Warp)
+        const diskThickness = (15 + (r * 0.08)) * (Math.random() - 0.5);
+        // Voronka chuqurligi: markaz chuqur girdob bo'lib tortiladi
+        const funnelZ = -Math.cos((r / maxGalaxyR) * Math.PI * 0.5) * 55 + diskThickness;
+
+        pos[i3] = x;
+        pos[i3 + 1] = y * 0.78; // Yengil 3D istiqbol
+        pos[i3 + 2] = funnelZ;
+
+        vortexRadii[idx] = r;
+        vortexAngles[idx] = Math.atan2(y, x);
+        // Keplerian tezlik: markazga yaqin zarrachalar tez, chetdagilar sekin aylanadi
+        vortexSpeeds[idx] = Math.max(0.25, 1.4 / Math.sqrt(r * 0.035));
+        vortexHeights[idx] = funnelZ;
+
+        // Rang gradiyenti:
+        // Ichki spiral: neon qizil va elektr fuxsiya
+        // O'rta spiral: neon pushti va kosmik binafsha
+        // Tashqi qirralar: moviy yulduz changlari va yaltiroq feruza
+        if (r < 140) {
+          col[i3] = 1.0;
+          col[i3 + 1] = 0.05 + Math.random() * 0.15;
+          col[i3 + 2] = 0.45 + Math.random() * 0.35; // Neon qizil-fuxsiya
+        } else if (r < 270) {
+          col[i3] = 0.95;
+          col[i3 + 1] = 0.12 + Math.random() * 0.2;
+          col[i3 + 2] = 0.85 + Math.random() * 0.15; // Elektr pushti-binafsha
+        } else {
+          col[i3] = 0.35 + Math.random() * 0.3;
+          col[i3 + 1] = 0.15 + Math.random() * 0.3;
+          col[i3 + 2] = 0.95 + Math.random() * 0.05; // Chuqur kosmik binafsha-moviy
+        }
+      }
+
+      // 4. GALAKTIK HALO VA TASHQI KOSMIK YULDUZ CHANGLARI (Qolgan 7,000 zarracha)
+      while (idx < N) {
+        const i3 = idx * 3;
+        const a = Math.random() * Math.PI * 2;
+        const r = 180 + Math.random() * 320;
+        const x = Math.cos(a) * r;
+        const y = Math.sin(a) * (r * 0.75);
+        const z = (Math.random() - 0.5) * 120;
+
+        pos[i3] = x;
+        pos[i3 + 1] = y;
+        pos[i3 + 2] = z;
+
+        vortexRadii[idx] = r;
+        vortexAngles[idx] = a;
+        vortexSpeeds[idx] = 0.35;
+        vortexHeights[idx] = z;
+
+        // Mayin binafsha va zumrad-moviy uchqunlar
+        const rChoice = Math.random();
+        if (rChoice < 0.6) {
+          col[i3] = 0.7; col[i3 + 1] = 0.15; col[i3 + 2] = 0.95;
+        } else {
+          col[i3] = 0.1; col[i3 + 1] = 0.85; col[i3 + 2] = 0.9;
+        }
+
+        idx++;
+      }
+
       return { positions: pos, colors: col };
     }
 
@@ -714,7 +849,7 @@
       const roseCenterY = 55;
 
       // 1. G'uncha yadrosi (Tight Spiral Core)
-      const budCount = 3800;
+      const budCount = 4000;
       for (let i = 0; i < budCount && idx < N; i++, idx++) {
         const i3 = idx * 3;
         const t = Math.random();
@@ -739,7 +874,7 @@
         { count: 7, radius: 145, height: 26, openAngle: 1.25, yOffset: -12 }
       ];
 
-      const petalsParticles = 14500;
+      const petalsParticles = 15000;
       for (let i = 0; i < petalsParticles && idx < N; i++, idx++) {
         const i3 = idx * 3;
         const layer = petalLayers[i % petalLayers.length];
@@ -788,7 +923,7 @@
       }
 
       // 3. Kosachabarglar (Sepals)
-      const sepalsCount = 2500;
+      const sepalsCount = 2600;
       for (let i = 0; i < sepalsCount && idx < N; i++, idx++) {
         const i3 = idx * 3;
         const sepalIdx = Math.floor(Math.random() * 5);
@@ -808,7 +943,7 @@
       }
 
       // 4. Gul Poyasi va 2 ta Yashil Barg
-      const stemLeavesCount = 3800;
+      const stemLeavesCount = 4000;
       for (let i = 0; i < stemLeavesCount && idx < N; i++, idx++) {
         const i3 = idx * 3;
         const isLeaf = Math.random() < 0.55;
@@ -956,7 +1091,7 @@
       for (let i = 0; i < N; i++) {
         const i3 = i * 3;
         const angle = Math.random() * Math.PI * 2;
-        const force = 30 + Math.random() * 110;
+        const force = 35 + Math.random() * 120;
 
         velocities[i3] = Math.cos(angle) * force;
         velocities[i3 + 1] = Math.sin(angle) * force;
@@ -1015,19 +1150,19 @@
       startSound();
 
       // 1 ➔ 2 (Vorteks)
-      transitionTo(1, 2600);
+      transitionTo(1, 2800);
 
       if (sequenceTimer) clearTimeout(sequenceTimer);
-      // 2 ➔ 3 (Ism)
+      // 2 ➔ 3 (Ism) - Vorteks rohat bilan ko'rinishi uchun 4.2 soniya beramiz
       sequenceTimer = setTimeout(() => {
         transitionTo(2, 3000);
 
         // 3 ➔ 4 (Atirgul)
         sequenceTimer = setTimeout(() => {
           transitionTo(3, 3400);
-        }, 4200);
+        }, 4400);
 
-      }, 3800);
+      }, 4200);
     }
 
     /**
@@ -1116,7 +1251,7 @@
 
     /**
      * ========================================================
-     * ASOSIY RENDER HALQASI (60 FPS)
+     * ASOSIY RENDER VA REALISTIK GIGANT VORTEKS DINAMIKASI
      * ========================================================
      */
     const clock = new THREE.Clock();
@@ -1124,6 +1259,7 @@
     function render() {
       requestAnimationFrame(render);
       const elapsed = clock.getElapsedTime();
+      const delta = clock.getDelta();
       TWEEN.update();
 
       mouse.x += (mouse.targetX - mouse.x) * 0.05;
@@ -1140,9 +1276,37 @@
 
       if (!isTransitioning) {
         if (currentStage === 1) {
-          particleSystem.rotation.z = elapsed * 0.38;
-          particleSystem.rotation.y = Math.sin(elapsed * 0.5) * 0.2;
+          // 2-BOSQICH: HAQIQIY DIFFERENSIAL KEPLERIAN VORTEKS HARAKATI!
+          // Markaziy zarrachalar shiddat bilan aylanadi, spiral esa silliq o'raladi
+          const pulse = 1.0 + Math.sin(elapsed * 3.5) * 0.04;
+          
+          for (let i = 0; i < N; i++) {
+            const i3 = i * 3;
+            // Burchakni har bir zarrachaning o'z tezligiga qarab aylantiramiz
+            const speed = vortexSpeeds[i] * 0.018;
+            vortexAngles[i] += speed;
+
+            const r = vortexRadii[i] * pulse;
+            const a = vortexAngles[i];
+            const baseH = vortexHeights[i];
+
+            // To'lqinsimon kosmik tebranish (Warp wave)
+            const waveZ = Math.sin(a * 2 + elapsed * 2.5) * (r * 0.04);
+
+            currentPos[i3] = Math.cos(a) * r;
+            currentPos[i3 + 1] = Math.sin(a) * r * 0.78;
+            currentPos[i3 + 2] = baseH + waveZ;
+          }
+          geometry.attributes.position.needsUpdate = true;
+
+          // Butun galaktika diski sekin 3D burchakda suzib turadi
+          particleSystem.rotation.z = elapsed * 0.08;
+          particleSystem.rotation.x = 0.35 + Math.sin(elapsed * 0.6) * 0.08;
+          particleSystem.rotation.y = Math.cos(elapsed * 0.5) * 0.12;
+          particleSystem.scale.set(1, 1, 1);
+
         } else if (currentStage === 3) {
+          // 4-BOSQICH: ATIRGUL NAFAS OLISHI
           const breath = 1.0 + Math.sin(elapsed * 2.2) * 0.038;
           particleSystem.scale.set(breath, breath, breath);
 
@@ -1157,6 +1321,7 @@
         }
       } else {
         particleSystem.rotation.z *= 0.94;
+        particleSystem.rotation.x *= 0.94;
       }
 
       renderer.render(scene, camera);
