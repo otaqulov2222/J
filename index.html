@@ -8,7 +8,7 @@
   <!-- Shriftlar -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
 
   <!-- Three.js va Tween.js CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -30,7 +30,7 @@
       height: 100%;
       height: 100dvh;
       overflow: hidden;
-      background-color: #020005;
+      background: radial-gradient(circle at center, #0f021b 0%, #06010d 50%, #020005 100%);
       font-family: 'Montserrat', sans-serif;
       color: #fff;
       position: fixed;
@@ -48,7 +48,7 @@
       display: block;
     }
 
-    /* Minimalist UI qatlami */
+    /* Minimalist va Nafis UI */
     .ui-overlay {
       position: fixed;
       top: 0;
@@ -62,9 +62,9 @@
       flex-direction: column;
       justify-content: flex-end;
       align-items: center;
-      padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px));
-      padding-left: 16px;
-      padding-right: 16px;
+      padding-bottom: calc(52px + env(safe-area-inset-bottom, 0px));
+      padding-left: 20px;
+      padding-right: 20px;
     }
 
     .btn-wrapper {
@@ -72,107 +72,123 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 12px;
       transition: all 0.75s cubic-bezier(0.16, 1, 0.3, 1);
-      width: 100%;
-      max-width: 320px;
+      width: auto;
     }
 
     .btn-wrapper.hidden {
       opacity: 0;
-      transform: translateY(35px) scale(0.92);
+      transform: translateY(40px) scale(0.9);
       pointer-events: none;
     }
 
-    /* Zamonaviy Neon Kashf Qilish Tugmasi - Mobile Friendly */
+    /* Yuqori Darajadagi Professional Neon "BOSING" Tugmasi */
     .neon-btn {
       position: relative;
-      width: 100%;
-      max-width: 290px;
-      min-height: 56px;
-      background: linear-gradient(135deg, rgba(230, 0, 60, 0.4), rgba(130, 20, 210, 0.5));
-      border: 1.5px solid rgba(255, 110, 160, 0.85);
+      min-width: 260px;
+      min-height: 58px;
+      background: linear-gradient(135deg, rgba(255, 0, 75, 0.45) 0%, rgba(140, 20, 220, 0.55) 100%);
+      border: 1.5px solid rgba(255, 130, 180, 0.85);
       color: #ffffff;
-      padding: 15px 28px;
+      padding: 16px 42px;
       font-family: 'Cinzel', serif;
-      font-size: 15px;
-      font-weight: 700;
-      letter-spacing: 3.5px;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 5px;
       text-transform: uppercase;
-      border-radius: 50px;
+      border-radius: 60px;
       cursor: pointer;
-      backdrop-filter: blur(15px);
-      -webkit-backdrop-filter: blur(15px);
-      box-shadow: 0 0 35px rgba(230, 0, 60, 0.55),
-                  0 0 65px rgba(130, 20, 210, 0.35),
-                  inset 0 0 18px rgba(255, 255, 255, 0.35);
-      transition: all 0.3s ease;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 0 40px rgba(255, 0, 80, 0.5),
+                  0 0 80px rgba(140, 20, 220, 0.35),
+                  inset 0 0 20px rgba(255, 255, 255, 0.35);
+      transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       outline: none;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 12px;
+      animation: btnGlowPulse 2.4s infinite ease-in-out;
+    }
+
+    @keyframes btnGlowPulse {
+      0%, 100% {
+        box-shadow: 0 0 35px rgba(255, 0, 80, 0.5),
+                    0 0 70px rgba(140, 20, 220, 0.3),
+                    inset 0 0 15px rgba(255, 255, 255, 0.25);
+        border-color: rgba(255, 110, 160, 0.75);
+      }
+      50% {
+        box-shadow: 0 0 55px rgba(255, 0, 80, 0.85),
+                    0 0 100px rgba(150, 30, 240, 0.55),
+                    inset 0 0 25px rgba(255, 255, 255, 0.5);
+        border-color: rgba(255, 200, 230, 1);
+        transform: translateY(-2px);
+      }
+    }
+
+    .neon-btn:hover {
+      background: linear-gradient(135deg, rgba(255, 20, 90, 0.7) 0%, rgba(160, 40, 245, 0.75) 100%);
+      transform: scale(1.05) translateY(-3px);
     }
 
     .neon-btn:active {
-      transform: scale(0.96);
-      background: linear-gradient(135deg, rgba(255, 20, 80, 0.65), rgba(160, 40, 240, 0.7));
+      transform: scale(0.96) translateY(0);
+      background: linear-gradient(135deg, rgba(255, 0, 75, 0.8) 0%, rgba(140, 20, 220, 0.85) 100%);
     }
 
     .btn-heart-icon {
-      width: 20px;
-      height: 20px;
+      width: 22px;
+      height: 22px;
       fill: #ff1744;
-      filter: drop-shadow(0 0 6px #ff1744);
+      filter: drop-shadow(0 0 8px #ff1744);
       animation: heartBeat 1.4s infinite ease-in-out;
       flex-shrink: 0;
     }
 
     @keyframes heartBeat {
       0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.25); }
+      50% { transform: scale(1.3); }
     }
 
-    .hint-label {
-      font-size: 10.5px;
-      letter-spacing: 2.5px;
-      color: rgba(255, 220, 235, 0.75);
-      text-transform: uppercase;
-      text-shadow: 0 0 10px rgba(255, 50, 100, 0.5);
-      text-align: center;
-    }
-
-    /* Ovoz tugmasi - Mobile Friendly */
+    /* Ovoz tugmasi */
     .mute-btn {
       position: fixed;
-      top: calc(18px + env(safe-area-inset-top, 0px));
-      right: calc(18px + env(safe-area-inset-right, 0px));
+      top: calc(20px + env(safe-area-inset-top, 0px));
+      right: calc(20px + env(safe-area-inset-right, 0px));
       z-index: 25;
       background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      width: 42px;
-      height: 42px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       color: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       transition: all 0.3s;
       outline: none;
     }
 
-    .mute-btn:active {
-      transform: scale(0.92);
-      background: rgba(255, 30, 80, 0.4);
+    .mute-btn:hover {
+      background: rgba(255, 30, 90, 0.35);
+      border-color: rgba(255, 120, 170, 0.8);
+      transform: scale(1.08);
+      color: #fff;
     }
 
-    /* Qayta o'ynash tugmasi - Mobile Friendly */
+    .mute-btn:active {
+      transform: scale(0.92);
+    }
+
+    /* Qayta ko'rish tugmasi */
     .replay-wrap {
       position: fixed;
-      bottom: calc(22px + env(safe-area-inset-bottom, 0px));
+      bottom: calc(26px + env(safe-area-inset-bottom, 0px));
       left: 50%;
       transform: translateX(-50%);
       pointer-events: auto;
@@ -180,8 +196,6 @@
       opacity: 0;
       pointer-events: none;
       transition: opacity 1s ease;
-      width: auto;
-      max-width: 90%;
     }
 
     .replay-wrap.active {
@@ -190,29 +204,34 @@
     }
 
     .replay-btn {
-      background: rgba(20, 10, 28, 0.7);
-      border: 1.2px solid rgba(255, 90, 140, 0.6);
+      background: rgba(20, 10, 30, 0.7);
+      border: 1.2px solid rgba(255, 90, 150, 0.6);
       color: rgba(255, 225, 240, 0.95);
-      padding: 11px 26px;
-      border-radius: 30px;
-      font-size: 11.5px;
-      font-weight: 600;
-      letter-spacing: 2px;
+      padding: 12px 28px;
+      border-radius: 35px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
       text-transform: uppercase;
       cursor: pointer;
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      box-shadow: 0 0 20px rgba(255, 20, 80, 0.35);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      box-shadow: 0 0 25px rgba(255, 20, 80, 0.4);
       transition: all 0.3s;
       display: flex;
       align-items: center;
-      gap: 8px;
-      white-space: nowrap;
+      gap: 10px;
+    }
+
+    .replay-btn:hover {
+      background: rgba(255, 20, 90, 0.45);
+      border-color: rgba(255, 150, 200, 0.9);
+      box-shadow: 0 0 35px rgba(255, 20, 90, 0.6);
+      transform: scale(1.05);
     }
 
     .replay-btn:active {
       transform: scale(0.95);
-      background: rgba(255, 20, 80, 0.45);
     }
   </style>
 </head>
@@ -226,9 +245,8 @@
         <svg class="btn-heart-icon" viewBox="0 0 24 24">
           <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
         </svg>
-        Kashf qilish
+        BOSING
       </button>
-      <span class="hint-label">Maktubni ochish uchun bosing</span>
     </div>
   </div>
 
@@ -251,60 +269,47 @@
   <audio id="bg-audio" loop preload="auto"></audio>
 
   <!-- ======================================================== -->
-  <!-- 3D PARTICLES ENGINE - FULLY RESPONSIVE FOR MOBILE & DESKTOP -->
+  <!-- 3D PARTICLES ENGINE                                      -->
   <!-- ======================================================== -->
   <script>
     const CONFIG = {
       recipientName: "Josiya",
-      particleCount: 30000,
-      starCount: 2200,
+      particleCount: 32000, // 32,000 ta yorqin zarrachalar (butun ekranga to'liq kosmik muhit berish uchun)
+      starCount: 2600,
       audioUrl: ""
     };
 
-    /**
-     * MOBIL EKRAN VA ORIENTATSIYA ANIQLASH
-     */
-    function isMobileDevice() {
+    function isMobile() {
       return (window.innerWidth < 768) || ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
     }
 
     /**
-     * THREE.JS SAHNA VA KAMERA
+     * THREE.JS SAHNA VA RESPONSIVE KAMERA
      */
     const canvas = document.getElementById("webgl-canvas");
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x020005, 0.0009);
+    scene.fog = new THREE.FogExp2(0x04000a, 0.0007);
 
-    const camera = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.1, 4000);
+    const camera = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.1, 4500);
 
-    /**
-     * DINAMIK KAMERA MASOFASI (Responsive Camera Framing)
-     * Portret rejimida (smartfonlarda) barcha shakllar ekranning markaziga
-     * hech qanday kesilishsiz sig'ishi uchun kamera masofasini moslaydi.
-     */
-    function updateResponsiveCamera() {
+    function updateCameraFrame() {
       const w = window.innerWidth;
       const h = window.innerHeight;
       const aspect = w / h;
-
       camera.aspect = aspect;
       camera.updateProjectionMatrix();
 
-      // Agar ekran tor bo'lsa (vertikal telefon), kamerani orqaroqqa suramiz
       if (aspect < 0.6) {
-        // Standart vertikal smartfonlar (iPhone, Android 9:16 ~ 9:20)
-        camera.position.z = 760;
+        camera.position.z = 740;
       } else if (aspect < 0.8) {
-        camera.position.z = 660;
+        camera.position.z = 640;
       } else if (aspect < 1.1) {
-        // Kvadrat / Kichik planshetlar
-        camera.position.z = 580;
+        camera.position.z = 560;
       } else {
-        // Gorizontal Desktop / Planshet
         camera.position.z = 480;
       }
     }
-    updateResponsiveCamera();
+    updateCameraFrame();
 
     const renderer = new THREE.WebGLRenderer({
       canvas: canvas,
@@ -313,73 +318,62 @@
       powerPreference: "high-performance"
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    // Mobil ekranlar uchun optimal DPI (batareya va 60 FPS saqlash uchun max 2)
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    renderer.setClearColor(0x020005, 1);
+    renderer.setClearColor(0x04000a, 1);
 
     /**
-     * SICHQONCHA, TOUCH VA GYRO-TILT INTERFAYLARI
+     * SICHQONCHA, TOUCH VA GYRO-TILT
      */
     const mouse = { x: 0, y: 0, targetX: 0, targetY: 0 };
 
-    // Sichqoncha harakati (Desktop)
     window.addEventListener("mousemove", (e) => {
       mouse.targetX = (e.clientX - window.innerWidth / 2) * 0.35;
       mouse.targetY = (e.clientY - window.innerHeight / 2) * 0.35;
     });
 
-    // Barmoq harakati (Touch for Mobile)
-    let touchStartX = 0, touchStartY = 0;
     window.addEventListener("touchstart", (e) => {
-      initAudio(); // Mobil brauzerlarda audio unlock qilish
+      initAudio();
       if (e.touches.length > 0) {
-        touchStartX = e.touches[0].clientX;
-        touchStartY = e.touches[0].clientY;
+        mouse.targetX = (e.touches[0].clientX - window.innerWidth / 2) * 0.45;
+        mouse.targetY = (e.touches[0].clientY - window.innerHeight / 2) * 0.45;
       }
     }, { passive: true });
 
     window.addEventListener("touchmove", (e) => {
       if (e.touches.length > 0) {
-        const touch = e.touches[0];
-        mouse.targetX = (touch.clientX - window.innerWidth / 2) * 0.45;
-        mouse.targetY = (touch.clientY - window.innerHeight / 2) * 0.45;
+        mouse.targetX = (e.touches[0].clientX - window.innerWidth / 2) * 0.45;
+        mouse.targetY = (e.touches[0].clientY - window.innerHeight / 2) * 0.45;
       }
     }, { passive: true });
 
     window.addEventListener("touchend", () => {
-      // Barmoq olinganda sekin markazga qaytadi
       mouse.targetX *= 0.3;
       mouse.targetY *= 0.3;
     }, { passive: true });
 
-    // Gyroskop / Telefonni qimirlatganda 3D parallaks (Device Orientation)
     if (window.DeviceOrientationEvent) {
       window.addEventListener("deviceorientation", (e) => {
         if (e.gamma !== null && e.beta !== null) {
-          // gamma: chap/o'ng [-90, 90], beta: old/orqa [-180, 180]
           const tiltX = Math.max(-30, Math.min(30, e.gamma));
-          const tiltY = Math.max(-30, Math.min(30, e.beta - 45)); // Telefon qo'lda 45 gradus ushlanadi
+          const tiltY = Math.max(-30, Math.min(30, e.beta - 45));
           mouse.targetX = tiltX * 3.5;
           mouse.targetY = tiltY * 3.5;
         }
       }, { passive: true });
     }
 
-    // Ekran o'lchami yoki orientatsiya o'zgarganda (Resize & Orientation Change)
-    function onWindowResize() {
-      updateResponsiveCamera();
+    function onResize() {
+      updateCameraFrame();
       renderer.setSize(window.innerWidth, window.innerHeight);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     }
-    window.addEventListener("resize", onWindowResize);
-    window.addEventListener("orientationchange", () => {
-      setTimeout(onWindowResize, 200);
-    });
+    window.addEventListener("resize", onResize);
+    window.addEventListener("orientationchange", () => setTimeout(onResize, 200));
 
     /**
-     * YUQORI SIFATLI ZARRACHA TEKSTURASI
+     * YUQORI DARADA PORLOQ ZARRACHA TEKSTURASI
      */
-    function createParticleTexture() {
+    function createGlowTexture() {
       const c = document.createElement("canvas");
       c.width = 64;
       c.height = 64;
@@ -387,22 +381,22 @@
 
       const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
       g.addColorStop(0, "rgba(255, 255, 255, 1)");
-      g.addColorStop(0.25, "rgba(255, 220, 235, 0.95)");
-      g.addColorStop(0.5, "rgba(255, 30, 90, 0.4)");
-      g.addColorStop(0.8, "rgba(140, 20, 220, 0.1)");
+      g.addColorStop(0.22, "rgba(255, 225, 240, 0.95)");
+      g.addColorStop(0.5, "rgba(255, 30, 100, 0.45)");
+      g.addColorStop(0.8, "rgba(140, 20, 220, 0.12)");
       g.addColorStop(1, "rgba(0, 0, 0, 0)");
 
       ctx.fillStyle = g;
       ctx.fillRect(0, 0, 64, 64);
 
-      const texture = new THREE.CanvasTexture(c);
-      texture.needsUpdate = true;
-      return texture;
+      const t = new THREE.CanvasTexture(c);
+      t.needsUpdate = true;
+      return t;
     }
-    const particleTex = createParticleTexture();
+    const glowTex = createGlowTexture();
 
     /**
-     * FONDA AYLONUVCHI YULDUZLAR
+     * MILTILLOVCHI YULDUZLAR FON QATLAMI
      */
     let starsPoints;
     function initStars() {
@@ -412,12 +406,12 @@
 
       for (let i = 0; i < CONFIG.starCount; i++) {
         const i3 = i * 3;
-        pos[i3] = (Math.random() - 0.5) * 2600;
-        pos[i3 + 1] = (Math.random() - 0.5) * 2600;
-        pos[i3 + 2] = (Math.random() - 0.5) * 2200 - 450;
+        pos[i3] = (Math.random() - 0.5) * 2800;
+        pos[i3 + 1] = (Math.random() - 0.5) * 2800;
+        pos[i3 + 2] = (Math.random() - 0.5) * 2400 - 450;
 
         const rand = Math.random();
-        let c = (rand < 0.6) ? new THREE.Color(0xffffff) : (rand < 0.85 ? new THREE.Color(0xff75a0) : new THREE.Color(0x9d4edd));
+        let c = (rand < 0.6) ? new THREE.Color(0xffffff) : (rand < 0.85 ? new THREE.Color(0xff75a8) : new THREE.Color(0xa855f7));
         col[i3] = c.r; col[i3 + 1] = c.g; col[i3 + 2] = c.b;
       }
 
@@ -425,10 +419,10 @@
       geo.setAttribute("color", new THREE.BufferAttribute(col, 3));
 
       const mat = new THREE.PointsMaterial({
-        size: isMobileDevice() ? 3.8 : 3.2,
-        map: particleTex,
+        size: isMobile() ? 4.0 : 3.4,
+        map: glowTex,
         transparent: true,
-        opacity: 0.7,
+        opacity: 0.75,
         vertexColors: true,
         blending: THREE.AdditiveBlending,
         depthWrite: false
@@ -457,18 +451,15 @@
     const delays = new Float32Array(N);
 
     for (let i = 0; i < N; i++) {
-      delays[i] = Math.random() * 0.3;
+      delays[i] = Math.random() * 0.32;
     }
 
     geometry.setAttribute("position", new THREE.BufferAttribute(currentPos, 3));
     geometry.setAttribute("color", new THREE.BufferAttribute(currentCol, 3));
 
-    // Mobilda zarrachalar hajmi aniq ko'rinishi uchun biroz kattaroq (5.0px)
-    const particleSize = isMobileDevice() ? 5.2 : 4.6;
-
     const particlesMaterial = new THREE.PointsMaterial({
-      size: particleSize,
-      map: particleTex,
+      size: isMobile() ? 5.2 : 4.6,
+      map: glowTex,
       transparent: true,
       opacity: 0.95,
       vertexColors: true,
@@ -481,7 +472,8 @@
 
     /**
      * ========================================================
-     * 1-BOSQICH: KONVERT VA "Sen uchun ❤️"
+     * 1-BOSQICH: KONVERT, "Sen uchun ❤️" VA BUTUN EKRANGA
+     * SOCHILGAN PORLOQ KOSMIK ZARRACHALAR
      * ========================================================
      */
     function createEnvelopeStage() {
@@ -489,45 +481,45 @@
       const col = new Float32Array(N * 3);
       let idx = 0;
 
-      // "Sen uchun" matni
-      const textPoints = getCanvasPoints("Sen uchun", 64, 400, 120);
-      const textPartCount = 7000;
-      for (let i = 0; i < textPartCount && idx < N; i++, idx++) {
+      // 1. "Sen uchun" matni (Yuksak aniqlik, 7,200 zarracha)
+      const textPoints = getCanvasPoints("Sen uchun", 68, 440, 130);
+      const textCount = 7200;
+      for (let i = 0; i < textCount && idx < N; i++, idx++) {
         const i3 = idx * 3;
         const p = textPoints[i % textPoints.length];
-        pos[i3] = p.x - 45 + (Math.random() - 0.5) * 1.5;
-        pos[i3 + 1] = p.y + 130 + (Math.random() - 0.5) * 1.5;
-        pos[i3 + 2] = (Math.random() - 0.5) * 4;
+        pos[i3] = p.x - 48 + (Math.random() - 0.5) * 1.5;
+        pos[i3 + 1] = p.y + 132 + (Math.random() - 0.5) * 1.5;
+        pos[i3 + 2] = (Math.random() - 0.5) * 5;
 
-        const isCore = Math.random() < 0.7;
+        const isCore = Math.random() < 0.72;
         col[i3] = 1.0;
-        col[i3 + 1] = isCore ? 0.95 : 0.6;
-        col[i3 + 2] = isCore ? 0.98 : 0.8;
+        col[i3 + 1] = isCore ? 0.95 : 0.45;
+        col[i3 + 2] = isCore ? 0.98 : 0.75;
       }
 
-      // Qizil Yurakcha Ikonkasi (❤️)
-      const heartIconCount = 3800;
-      for (let i = 0; i < heartIconCount && idx < N; i++, idx++) {
+      // 2. "Sen uchun" yozuvi yonidagi porloq Qizil Yurakcha Ikonkasi (❤️)
+      const topHeartCount = 4000;
+      for (let i = 0; i < topHeartCount && idx < N; i++, idx++) {
         const i3 = idx * 3;
         const t = Math.random() * Math.PI * 2;
-        const s = 1.45 * Math.sqrt(Math.random());
+        const s = 1.55 * Math.sqrt(Math.random());
 
         const hx = 16 * Math.pow(Math.sin(t), 3);
         const hy = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
 
-        pos[i3] = hx * s + 135 + (Math.random() - 0.5) * 1.8;
-        pos[i3 + 1] = hy * s + 130 + (Math.random() - 0.5) * 1.8;
-        pos[i3 + 2] = (Math.random() - 0.5) * 10 + 6;
+        pos[i3] = hx * s + 145 + (Math.random() - 0.5) * 1.8;
+        pos[i3 + 1] = hy * s + 132 + (Math.random() - 0.5) * 1.8;
+        pos[i3 + 2] = (Math.random() - 0.5) * 12 + 6;
 
         col[i3] = 1.0;
-        col[i3 + 1] = Math.random() < 0.2 ? 0.2 : 0.02;
+        col[i3 + 1] = Math.random() < 0.2 ? 0.18 : 0.02;
         col[i3 + 2] = 0.2;
       }
 
-      // Konvert ramkasi
-      const envW = 280, envH = 180;
-      const borderPartCount = 5000;
-      for (let i = 0; i < borderPartCount && idx < N; i++, idx++) {
+      // 3. Konvert ramkasi va qopqog'i (5,500 zarracha)
+      const envW = 290, envH = 185;
+      const borderCount = 5500;
+      for (let i = 0; i < borderCount && idx < N; i++, idx++) {
         const i3 = idx * 3;
         const r = Math.random();
         let px = 0, py = 0;
@@ -538,45 +530,70 @@
         else if (r < 0.8) { px = envW / 2; py = (Math.random() - 0.5) * envH; }
         else if (r < 0.9) {
           const t = Math.random();
-          px = -envW / 2 * (1 - t); py = envH / 2 * (1 - t) - 10 * t;
+          px = -envW / 2 * (1 - t); py = envH / 2 * (1 - t) - 12 * t;
         } else {
           const t = Math.random();
-          px = envW / 2 * (1 - t); py = envH / 2 * (1 - t) - 10 * t;
+          px = envW / 2 * (1 - t); py = envH / 2 * (1 - t) - 12 * t;
         }
 
         pos[i3] = px + (Math.random() - 0.5) * 2;
         pos[i3 + 1] = py - 8 + (Math.random() - 0.5) * 2;
-        pos[i3 + 2] = (Math.random() - 0.5) * 4;
+        pos[i3 + 2] = (Math.random() - 0.5) * 5;
 
-        col[i3] = 0.95; col[i3 + 1] = 0.25; col[i3 + 2] = 0.7;
+        col[i3] = 0.98; col[i3 + 1] = 0.2; col[i3 + 2] = 0.68;
       }
 
-      // Konvert markazidagi 3D Qizil Yurakcha Muhr
-      const sealCount = 5500;
+      // 4. Konvert markazidagi 3D Qizil Yurakcha Muhr (5,800 zarracha)
+      const sealCount = 5800;
       for (let i = 0; i < sealCount && idx < N; i++, idx++) {
         const i3 = idx * 3;
         const t = Math.random() * Math.PI * 2;
-        const s = 2.4 * Math.sqrt(Math.random());
+        const s = 2.45 * Math.sqrt(Math.random());
 
         const hx = 16 * Math.pow(Math.sin(t), 3);
         const hy = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
 
         pos[i3] = hx * s;
-        pos[i3 + 1] = hy * s - 18;
-        pos[i3 + 2] = (Math.random() - 0.5) * 14 + 12;
+        pos[i3 + 1] = hy * s - 20;
+        pos[i3 + 2] = (Math.random() - 0.5) * 16 + 14;
 
-        col[i3] = 0.95; col[i3 + 1] = 0.05; col[i3 + 2] = 0.15;
+        col[i3] = 0.96; col[i3 + 1] = 0.04; col[i3 + 2] = 0.16;
       }
 
+      // 5. BUTUN EKRAN BO'YLAB SOCHILGAN KOSMIK ZARRACHALAR (9,500+ zarracha)
+      // Endi cheklangan tor aylanada emas, butun ekran fazosiga tarqaladi!
       while (idx < N) {
         const i3 = idx * 3;
-        const a = Math.random() * Math.PI * 2;
-        const rad = 160 + Math.random() * 150;
-        pos[i3] = Math.cos(a) * rad;
-        pos[i3 + 1] = Math.sin(a) * (rad * 0.65);
-        pos[i3 + 2] = (Math.random() - 0.5) * 80;
+        const sub = Math.random();
 
-        col[i3] = 0.6; col[i3 + 1] = 0.15; col[i3 + 2] = 0.8;
+        if (sub < 0.65) {
+          // Keng butun ekran maydoni bo'ylab (to'liq monitor / telefon ekranini qoplaydi)
+          pos[i3] = (Math.random() - 0.5) * 1350;
+          pos[i3 + 1] = (Math.random() - 0.5) * 1050;
+          pos[i3 + 2] = (Math.random() - 0.5) * 600;
+
+          // Turli rangdagi kosmik jilvalar (pushti, binafsha, neon atirgul, zumrad va moviy)
+          const cChoice = Math.random();
+          if (cChoice < 0.45) {
+            col[i3] = 0.95; col[i3 + 1] = 0.15; col[i3 + 2] = 0.55; // Neon pushti
+          } else if (cChoice < 0.75) {
+            col[i3] = 0.65; col[i3 + 1] = 0.15; col[i3 + 2] = 0.95; // Binafsha
+          } else if (cChoice < 0.9) {
+            col[i3] = 1.0; col[i3 + 1] = 0.85; col[i3 + 2] = 0.9;  // Oq-pushti uchqun
+          } else {
+            col[i3] = 0.05; col[i3 + 1] = 0.85; col[i3 + 2] = 0.8; // Moviy nur
+          }
+        } else {
+          // Konvert atrofidagi mayin nurli aura (Ambient Cloud)
+          const angle = Math.random() * Math.PI * 2;
+          const radius = 170 + Math.random() * 380;
+          pos[i3] = Math.cos(angle) * radius + (Math.random() - 0.5) * 50;
+          pos[i3 + 1] = Math.sin(angle) * (radius * 0.7) + (Math.random() - 0.5) * 50;
+          pos[i3 + 2] = (Math.random() - 0.5) * 180;
+
+          col[i3] = 0.85; col[i3 + 1] = 0.18; col[i3 + 2] = 0.65;
+        }
+
         idx++;
       }
 
@@ -592,7 +609,7 @@
       const pos = new Float32Array(N * 3);
       const col = new Float32Array(N * 3);
       const arms = 4;
-      const maxR = 390;
+      const maxR = 410;
 
       for (let i = 0; i < N; i++) {
         const i3 = i * 3;
@@ -602,18 +619,18 @@
         const p = Math.pow(Math.random(), 1.45);
         const r = p * maxR;
         const angle = r * 0.038 + armAngle;
-        const spread = (Math.random() - 0.5) * (20 + r * 0.18);
+        const spread = (Math.random() - 0.5) * (22 + r * 0.18);
 
         pos[i3] = Math.cos(angle) * r + Math.sin(angle) * spread;
         pos[i3 + 1] = (Math.sin(angle) * r - Math.cos(angle) * spread) * 0.75;
-        pos[i3 + 2] = -Math.cos(p * Math.PI) * 80 + (Math.random() - 0.5) * (15 + r * 0.15);
+        pos[i3 + 2] = -Math.cos(p * Math.PI) * 85 + (Math.random() - 0.5) * (18 + r * 0.15);
 
-        if (r < 45) {
-          col[i3] = 1.0; col[i3 + 1] = 0.9; col[i3 + 2] = 0.7;
-        } else if (r < 180) {
-          col[i3] = 1.0; col[i3 + 1] = 0.1; col[i3 + 2] = 0.45;
+        if (r < 48) {
+          col[i3] = 1.0; col[i3 + 1] = 0.92; col[i3 + 2] = 0.75;
+        } else if (r < 190) {
+          col[i3] = 1.0; col[i3 + 1] = 0.12; col[i3 + 2] = 0.48;
         } else {
-          col[i3] = 0.55; col[i3 + 1] = 0.1; col[i3 + 2] = 0.95;
+          col[i3] = 0.58; col[i3 + 1] = 0.12; col[i3 + 2] = 0.95;
         }
       }
       return { positions: pos, colors: col };
@@ -649,13 +666,13 @@
       while (idx < N) {
         const i3 = idx * 3;
         const a = Math.random() * Math.PI * 2;
-        const rad = 240 + Math.random() * 130;
+        const rad = 240 + Math.random() * 150;
 
         pos[i3] = Math.cos(a) * rad;
         pos[i3 + 1] = Math.sin(a) * (rad * 0.45);
-        pos[i3 + 2] = (Math.random() - 0.5) * 70;
+        pos[i3 + 2] = (Math.random() - 0.5) * 80;
 
-        col[i3] = 0.85; col[i3 + 1] = 0.1; col[i3 + 2] = 0.6;
+        col[i3] = 0.88; col[i3 + 1] = 0.12; col[i3 + 2] = 0.62;
         idx++;
       }
 
@@ -675,7 +692,7 @@
       const roseCenterY = 55;
 
       // 1. G'uncha yadrosi (Tight Spiral Core)
-      const budCount = 3500;
+      const budCount = 3700;
       for (let i = 0; i < budCount && idx < N; i++, idx++) {
         const i3 = idx * 3;
         const t = Math.random();
@@ -700,7 +717,7 @@
         { count: 7, radius: 145, height: 26, openAngle: 1.25, yOffset: -12 }
       ];
 
-      const petalsParticles = 13000;
+      const petalsParticles = 14000;
       for (let i = 0; i < petalsParticles && idx < N; i++, idx++) {
         const i3 = idx * 3;
         const layer = petalLayers[i % petalLayers.length];
@@ -749,7 +766,7 @@
       }
 
       // 3. Kosachabarglar (Sepals)
-      const sepalsCount = 2200;
+      const sepalsCount = 2400;
       for (let i = 0; i < sepalsCount && idx < N; i++, idx++) {
         const i3 = idx * 3;
         const sepalIdx = Math.floor(Math.random() * 5);
@@ -769,7 +786,7 @@
       }
 
       // 4. Gul Poyasi va 2 ta Yashil Barg
-      const stemLeavesCount = 3500;
+      const stemLeavesCount = 3700;
       for (let i = 0; i < stemLeavesCount && idx < N; i++, idx++) {
         const i3 = idx * 3;
         const isLeaf = Math.random() < 0.55;
@@ -994,7 +1011,7 @@
 
     /**
      * ========================================================
-     * WEB AUDIO AMBIENT (MOBIL SAFARI/CHROME UNLOCK BILAN)
+     * WEB AUDIO AMBIENT
      * ========================================================
      */
     let audioCtx = null;
@@ -1088,7 +1105,6 @@
       const elapsed = clock.getElapsedTime();
       TWEEN.update();
 
-      // Kamera parallaks harakati (silliq lerp)
       mouse.x += (mouse.targetX - mouse.x) * 0.05;
       mouse.y += (mouse.targetY - mouse.y) * 0.05;
 
@@ -1127,7 +1143,7 @@
     render();
 
     /**
-     * TUGMALAR HODISALARI (Click va Touch)
+     * HODISALAR
      */
     const openBtn = document.getElementById("open-btn");
     openBtn.addEventListener("click", startExperience);
