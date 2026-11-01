@@ -48,6 +48,48 @@
       display: block;
     }
 
+    /* Butun tizim bo'yicha o'ngda pastda turuvchi nafis "FJ" monogrammasi */
+    .brand-fj {
+      position: fixed;
+      bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+      right: calc(22px + env(safe-area-inset-right, 0px));
+      z-index: 50;
+      font-family: 'Cinzel', serif;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 3.5px;
+      color: rgba(255, 220, 240, 0.9);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 120, 180, 0.35);
+      padding: 7px 16px;
+      border-radius: 25px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 0 20px rgba(255, 20, 90, 0.25),
+                  inset 0 0 10px rgba(255, 255, 255, 0.1);
+      text-shadow: 0 0 12px rgba(255, 80, 150, 0.8),
+                   0 0 24px rgba(140, 20, 220, 0.5);
+      pointer-events: none;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      animation: fjPulse 3s infinite ease-in-out;
+    }
+
+    @keyframes fjPulse {
+      0%, 100% {
+        opacity: 0.8;
+        border-color: rgba(255, 120, 180, 0.35);
+        box-shadow: 0 0 18px rgba(255, 20, 90, 0.2);
+      }
+      50% {
+        opacity: 1;
+        border-color: rgba(255, 160, 210, 0.65);
+        box-shadow: 0 0 28px rgba(255, 20, 90, 0.45), 0 0 45px rgba(140, 20, 220, 0.3);
+      }
+    }
+
     /* Minimalist va Nafis UI */
     .ui-overlay {
       position: fixed;
@@ -237,6 +279,9 @@
 </head>
 <body>
 
+  <!-- Butun tizim bo'yicha o'ngda pastda turuvchi doimiy nafis monogramma -->
+  <div class="brand-fj" id="brand-badge">FJ</div>
+
   <canvas id="webgl-canvas"></canvas>
 
   <div class="ui-overlay">
@@ -275,7 +320,7 @@
     const CONFIG = {
       recipientName: "Josiya",
       specialDate: "03.04.2026",
-      particleCount: 35000, // 35,000 ta boy va qalin zarrachalar
+      particleCount: 35000,
       starCount: 2800,
       audioUrl: ""
     };
@@ -382,7 +427,7 @@
 
       const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
       g.addColorStop(0, "rgba(255, 255, 255, 1)");
-      g.addColorStop(0.2, "rgba(255, 230, 245, 0.95)");
+      g.addColorStop(0.22, "rgba(255, 230, 245, 0.95)");
       g.addColorStop(0.5, "rgba(255, 30, 110, 0.45)");
       g.addColorStop(0.8, "rgba(140, 20, 220, 0.12)");
       g.addColorStop(1, "rgba(0, 0, 0, 0)");
@@ -451,7 +496,6 @@
     const velocities = new Float32Array(N * 3);
     const delays = new Float32Array(N);
 
-    // Vorteks uchun individual aylanish radiusi, burchagi va tezliklari
     const vortexRadii = new Float32Array(N);
     const vortexAngles = new Float32Array(N);
     const vortexSpeeds = new Float32Array(N);
@@ -629,7 +673,6 @@
     /**
      * ========================================================
      * 2-BOSQICH: HAQIQIY GIGANT 3D KOSMIK GALAKTIKA VORTEKSI
-     * (Supermassive Galactic Core + Accretion Disk + Cosmic Jets)
      * ========================================================
      */
     function createVortexStage() {
@@ -638,12 +681,11 @@
       let idx = 0;
 
       // 1. MARKAZIY O'TA YORQIN YADRO (Supermassive Core / Quasar Bulge) - 6,500 zarracha
-      // Zich, qizigan oq-oltin va elektr ko'k plazma shari
       const coreCount = 6500;
       for (let i = 0; i < coreCount && idx < N; i++, idx++) {
         const i3 = idx * 3;
         const u = Math.random();
-        const r = Math.pow(u, 1.8) * 55; // Markazda o'ta zich
+        const r = Math.pow(u, 1.8) * 55;
         const theta = Math.random() * Math.PI * 2;
         const phi = (Math.random() - 0.5) * Math.PI * 0.7;
 
@@ -655,30 +697,27 @@
         pos[i3 + 1] = y;
         pos[i3 + 2] = z;
 
-        // Individual vorteks aylanish parametrlari
         vortexRadii[idx] = Math.sqrt(x * x + y * y);
         vortexAngles[idx] = Math.atan2(y, x);
-        vortexSpeeds[idx] = (1.8 + Math.random() * 0.6); // Markaz juda tez aylanadi
+        vortexSpeeds[idx] = (1.8 + Math.random() * 0.6);
         vortexHeights[idx] = z;
 
-        // Rang: markaz oq-oltin nurdan elektr ko'k-fuxsiyaga
         const distRatio = r / 55;
         if (distRatio < 0.35) {
-          col[i3] = 1.0; col[i3 + 1] = 0.98; col[i3 + 2] = 0.95; // Yorqin oq markaz
+          col[i3] = 1.0; col[i3 + 1] = 0.98; col[i3 + 2] = 0.95;
         } else if (distRatio < 0.7) {
-          col[i3] = 1.0; col[i3 + 1] = 0.85; col[i3 + 2] = 0.35; // Oltin jilo
+          col[i3] = 1.0; col[i3 + 1] = 0.85; col[i3 + 2] = 0.35;
         } else {
-          col[i3] = 0.3; col[i3 + 1] = 0.85; col[i3 + 2] = 1.0;  // Elektr moviy plazma
+          col[i3] = 0.3; col[i3 + 1] = 0.85; col[i3 + 2] = 1.0;
         }
       }
 
       // 2. KOSMIK QUTBIY OQIMLAR (Relativistic Polar Jets) - 3,500 zarracha
-      // Markazdan yuqoriga (+Z) va pastga (-Z) otilib chiquvchi yorqin nurlar konusi
       const jetCount = 3500;
       for (let i = 0; i < jetCount && idx < N; i++, idx++) {
         const i3 = idx * 3;
         const dir = (Math.random() < 0.5 ? 1 : -1);
-        const h = Math.pow(Math.random(), 1.4) * 220; // Jet balandligi
+        const h = Math.pow(Math.random(), 1.4) * 220;
         const spreadR = (h * 0.22) * Math.sqrt(Math.random());
         const jetAngle = Math.random() * Math.PI * 2;
 
@@ -695,16 +734,14 @@
         vortexSpeeds[idx] = 1.2;
         vortexHeights[idx] = z;
 
-        // Elektr neon moviy va oq nur
         col[i3] = 0.4 + Math.random() * 0.6;
         col[i3 + 1] = 0.8 + Math.random() * 0.2;
         col[i3 + 2] = 1.0;
       }
 
       // 3. 3D QALIN SPIRAL TARMOQLAR (Dense Logarithmic Spiral Arms) - 18,000 zarracha
-      // Ingichka chiziq emas! Haqiqiy galaktika gaz va yulduz bulutlari (nebula dust)
       const armParticles = 18000;
-      const numArms = 2; // 2 ta dominant yirik spiral qo'l (Sombrero/Andromeda kabi)
+      const numArms = 2;
       const maxGalaxyR = 430;
 
       for (let i = 0; i < armParticles && idx < N; i++, idx++) {
@@ -712,52 +749,41 @@
         const armIdx = i % numArms;
         const armBaseAngle = (armIdx * Math.PI * 2) / numArms;
 
-        // Logarifmik spiral radiusi
         const p = Math.pow(Math.random(), 1.35);
         const r = 40 + p * (maxGalaxyR - 40);
-
-        // Spiral burilish burchagi (markazdan qirragacha silliq o'raladi)
         const spiralAngle = Math.log(r / 35) * 2.8 + armBaseAngle;
 
-        // Kenglik tarqalishi: markazdan uzoqlashgan sari spiral kengayadi (Astrophysical Arm Width)
         const armWidth = 22 + (r * 0.16);
-        const normalOffset = (Math.random() - 0.5 + (Math.random() - 0.5)) * armWidth; // Gaussian-like spread
+        const normalOffset = (Math.random() - 0.5 + (Math.random() - 0.5)) * armWidth;
 
         const tangentAngle = spiralAngle + Math.PI * 0.5;
         let x = Math.cos(spiralAngle) * r + Math.cos(tangentAngle) * normalOffset;
         let y = Math.sin(spiralAngle) * r + Math.sin(tangentAngle) * normalOffset;
 
-        // 3D qalinlik va egri disk effekti (Galactic Vertical Thickness & Warp)
         const diskThickness = (15 + (r * 0.08)) * (Math.random() - 0.5);
-        // Voronka chuqurligi: markaz chuqur girdob bo'lib tortiladi
         const funnelZ = -Math.cos((r / maxGalaxyR) * Math.PI * 0.5) * 55 + diskThickness;
 
         pos[i3] = x;
-        pos[i3 + 1] = y * 0.78; // Yengil 3D istiqbol
+        pos[i3 + 1] = y * 0.78;
         pos[i3 + 2] = funnelZ;
 
         vortexRadii[idx] = r;
         vortexAngles[idx] = Math.atan2(y, x);
-        // Keplerian tezlik: markazga yaqin zarrachalar tez, chetdagilar sekin aylanadi
         vortexSpeeds[idx] = Math.max(0.25, 1.4 / Math.sqrt(r * 0.035));
         vortexHeights[idx] = funnelZ;
 
-        // Rang gradiyenti:
-        // Ichki spiral: neon qizil va elektr fuxsiya
-        // O'rta spiral: neon pushti va kosmik binafsha
-        // Tashqi qirralar: moviy yulduz changlari va yaltiroq feruza
         if (r < 140) {
           col[i3] = 1.0;
           col[i3 + 1] = 0.05 + Math.random() * 0.15;
-          col[i3 + 2] = 0.45 + Math.random() * 0.35; // Neon qizil-fuxsiya
+          col[i3 + 2] = 0.45 + Math.random() * 0.35;
         } else if (r < 270) {
           col[i3] = 0.95;
           col[i3 + 1] = 0.12 + Math.random() * 0.2;
-          col[i3 + 2] = 0.85 + Math.random() * 0.15; // Elektr pushti-binafsha
+          col[i3 + 2] = 0.85 + Math.random() * 0.15;
         } else {
           col[i3] = 0.35 + Math.random() * 0.3;
           col[i3 + 1] = 0.15 + Math.random() * 0.3;
-          col[i3 + 2] = 0.95 + Math.random() * 0.05; // Chuqur kosmik binafsha-moviy
+          col[i3 + 2] = 0.95 + Math.random() * 0.05;
         }
       }
 
@@ -779,7 +805,6 @@
         vortexSpeeds[idx] = 0.35;
         vortexHeights[idx] = z;
 
-        // Mayin binafsha va zumrad-moviy uchqunlar
         const rChoice = Math.random();
         if (rChoice < 0.6) {
           col[i3] = 0.7; col[i3 + 1] = 0.15; col[i3 + 2] = 0.95;
@@ -1153,7 +1178,7 @@
       transitionTo(1, 2800);
 
       if (sequenceTimer) clearTimeout(sequenceTimer);
-      // 2 ➔ 3 (Ism) - Vorteks rohat bilan ko'rinishi uchun 4.2 soniya beramiz
+      // 2 ➔ 3 (Ism)
       sequenceTimer = setTimeout(() => {
         transitionTo(2, 3000);
 
@@ -1259,7 +1284,6 @@
     function render() {
       requestAnimationFrame(render);
       const elapsed = clock.getElapsedTime();
-      const delta = clock.getDelta();
       TWEEN.update();
 
       mouse.x += (mouse.targetX - mouse.x) * 0.05;
@@ -1276,13 +1300,10 @@
 
       if (!isTransitioning) {
         if (currentStage === 1) {
-          // 2-BOSQICH: HAQIQIY DIFFERENSIAL KEPLERIAN VORTEKS HARAKATI!
-          // Markaziy zarrachalar shiddat bilan aylanadi, spiral esa silliq o'raladi
           const pulse = 1.0 + Math.sin(elapsed * 3.5) * 0.04;
           
           for (let i = 0; i < N; i++) {
             const i3 = i * 3;
-            // Burchakni har bir zarrachaning o'z tezligiga qarab aylantiramiz
             const speed = vortexSpeeds[i] * 0.018;
             vortexAngles[i] += speed;
 
@@ -1290,7 +1311,6 @@
             const a = vortexAngles[i];
             const baseH = vortexHeights[i];
 
-            // To'lqinsimon kosmik tebranish (Warp wave)
             const waveZ = Math.sin(a * 2 + elapsed * 2.5) * (r * 0.04);
 
             currentPos[i3] = Math.cos(a) * r;
@@ -1299,14 +1319,12 @@
           }
           geometry.attributes.position.needsUpdate = true;
 
-          // Butun galaktika diski sekin 3D burchakda suzib turadi
           particleSystem.rotation.z = elapsed * 0.08;
           particleSystem.rotation.x = 0.35 + Math.sin(elapsed * 0.6) * 0.08;
           particleSystem.rotation.y = Math.cos(elapsed * 0.5) * 0.12;
           particleSystem.scale.set(1, 1, 1);
 
         } else if (currentStage === 3) {
-          // 4-BOSQICH: ATIRGUL NAFAS OLISHI
           const breath = 1.0 + Math.sin(elapsed * 2.2) * 0.038;
           particleSystem.scale.set(breath, breath, breath);
 
