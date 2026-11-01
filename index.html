@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sen uchun ❤️ - Josiya</title>
+  
+  <!-- Shriftlar -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+
+  <!-- Three.js va Tween.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #020005;
+      font-family: 'Montserrat', sans-serif;
+      color: #fff;
+    }
+
+    #webgl-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      display: block;
+    }
+
+    /* Minimalist UI */
+    .ui-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      padding-bottom: 45px;
+    }
+
+    .btn-wrapper {
+      pointer-events: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .btn-wrapper.hidden {
+      opacity: 0;
+      transform: translateY(35px) scale(0.9);
+      pointer-events: none;
+    }
+
+    /* Zamonaviy Neon Kashf Qilish Tugmasi */
+    .neon-btn {
+      position: relative;
+      background: linear-gradient(135deg, rgba(230, 0, 60, 0.35), rgba(130, 20, 210, 0.45));
+      border: 1px solid rgba(255, 100, 150, 0.75);
+      color: #ffffff;
+      padding: 17px 46px;
+      font-family: 'Cinzel', serif;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      border-radius: 50px;
+      cursor: pointer;
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      box-shadow: 0 0 35px rgba(230, 0, 60, 0.5),
+                  0 0 65px rgba(130, 20, 210, 0.3),
+                  inset 0 0 20px rgba(255, 255, 255, 0.3);
+      transition: all 0.35s ease;
+      outline: none;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .neon-btn:hover {
+      background: linear-gradient(135deg, rgba(255, 20, 80, 0.6), rgba(160, 40, 240, 0.65));
+      border-color: rgba(255, 200, 230, 1);
+      box-shadow: 0 0 50px rgba(255, 20, 80, 0.85),
+                  0 0 90px rgba(160, 40, 240, 0.6),
+                  inset 0 0 25px rgba(255, 255, 255, 0.5);
+      transform: scale(1.06) translateY(-2px);
+    }
+
+    .neon-btn:active {
+      transform: scale(0.97) translateY(0);
+    }
+
+    .btn-heart-icon {
+      width: 20px;
+      height: 20px;
+      fill: #ff1744;
+      filter: drop-shadow(0 0 6px #ff1744);
+      animation: heartBeat 1.4s infinite ease-in-out;
+    }
+
+    @keyframes heartBeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.28); }
+    }
+
+    .hint-label {
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: rgba(255, 220, 235, 0.65);
+      text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(255, 50, 100, 0.4);
+    }
+
+    /* Ovoz tugmasi */
+    .mute-btn {
+      position: fixed;
+      bottom: 22px;
+      right: 22px;
+      z-index: 25;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: all 0.3s;
+      outline: none;
+    }
+
+    .mute-btn:hover {
+      background: rgba(255, 30, 80, 0.25);
+      border-color: rgba(255, 100, 150, 0.6);
+      color: #fff;
+      transform: scale(1.1);
+    }
+
+    /* Qayta o'ynash tugmasi (yakunda nozik paydo bo'ladi) */
+    .replay-wrap {
+      position: fixed;
+      bottom: 26px;
+      left: 50%;
+      transform: translateX(-50%);
+      pointer-events: auto;
+      z-index: 25;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 1s ease;
+    }
+
+    .replay-wrap.active {
+      opacity: 0.85;
+      pointer-events: auto;
+    }
+
+    .replay-wrap:hover {
+      opacity: 1;
+    }
+
+    .replay-btn {
+      background: rgba(20, 10, 25, 0.55);
+      border: 1px solid rgba(255, 80, 130, 0.4);
+      color: rgba(255, 220, 235, 0.9);
+      padding: 9px 24px;
+      border-radius: 30px;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .replay-btn:hover {
+      background: rgba(255, 20, 80, 0.35);
+      border-color: rgba(255, 120, 180, 0.8);
+      color: #fff;
+      box-shadow: 0 0 15px rgba(255, 20, 80, 0.5);
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="webgl-canvas"></canvas>
+
+  <div class="ui-overlay">
+    <div class="btn-wrapper" id="action-wrapper">
+      <button class="neon-btn" id="open-btn">
+        <svg class="btn-heart-icon" viewBox="0 0 24 24">
+          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+        </svg>
+        Kashf qilish
+      </button>
+      <span class="hint-label">Maktubni ochish uchun bosing</span>
+    </div>
+  </div>
+
+  <button class="mute-btn" id="mute-btn" title="Ovozni yoqish/o'chirish">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+    </svg>
+  </button>
+
+  <div class="replay-wrap" id="replay-box">
+    <button class="replay-btn" id="replay-btn">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M1 4v6h6M23 20v-6h-6"/>
+        <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/>
+      </svg>
+      Qayta ko'rish
+    </button>
+  </div>
+
+  <audio id="bg-audio" loop preload="auto"></audio>
+
+  <!-- ======================================================== -->
+  <!-- 3D PARTICLE ENGINE & HYPER-REALISTIC ROSE IMPLEMENTATION -->
+  <!-- ======================================================== -->
+  <script>
+    const CONFIG = {
+      recipientName: "Josiya",
+      particleCount: 30000, // 30,000 ta zich zarrachalar — atirgulni nihoyatda real qiladi
+      starCount: 2200,
+      audioUrl: "", // Agar mp3 URL bo'lsa shu yerga qo'yiladi
+    };
+
+    /**
+     * THREE.JS SAHNA VA KAMERA
+     */
+    const canvas = document.getElementById("webgl-canvas");
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x020005, 0.0009);
+
+    const camera = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.1, 4000);
+    camera.position.set(0, 0, 480);
+
+    const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: false });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setClearColor(0x020005, 1);
+
+    /**
+     * PARALLAKS SICHQONCHA VA TOUCH
+     */
+    const mouse = { x: 0, y: 0, targetX: 0, targetY: 0 };
+    window.addEventListener("mousemove", (e) => {
+      mouse.targetX = (e.clientX - window.innerWidth / 2) * 0.4;
+      mouse.targetY = (e.clientY - window.innerHeight / 2) * 0.4;
+    });
+
+    window.addEventListener("touchmove", (e) => {
+      if (e.touches.length > 0) {
+        mouse.targetX = (e.touches[0].clientX - window.innerWidth / 2) * 0.4;
+        mouse.targetY = (e.touches[0].clientY - window.innerHeight / 2) * 0.4;
+      }
+    }, { passive: true });
+
+    window.addEventListener("resize", () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    });
+
+    /**
+     * ZARRACHALAR PORLASH TEKSTURASI (High Quality Radial Glow Texture)
+     */
+    function createParticleTexture() {
+      const c = document.createElement("canvas");
+      c.width = 64;
+      c.height = 64;
+      const ctx = c.getContext("2d");
+
+      const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+      g.addColorStop(0, "rgba(255, 255, 255, 1)");
+      g.addColorStop(0.25, "rgba(255, 220, 235, 0.95)");
+      g.addColorStop(0.5, "rgba(255, 30, 90, 0.4)");
+      g.addColorStop(0.8, "rgba(140, 20, 220, 0.1)");
+      g.addColorStop(1, "rgba(0, 0, 0, 0)");
+
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, 64, 64);
+
+      const texture = new THREE.CanvasTexture(c);
+      texture.needsUpdate = true;
+      return texture;
+    }
+    const particleTex = createParticleTexture();
+
+    /**
+     * FONDA AYLANI SIZILGAN YULDUZLAR
+     */
+    let starsPoints;
+    function initStars() {
+      const geo = new THREE.BufferGeometry();
+      const pos = new Float32Array(CONFIG.starCount * 3);
+      const col = new Float32Array(CONFIG.starCount * 3);
+
+      for (let i = 0; i < CONFIG.starCount; i++) {
+        const i3 = i * 3;
+        pos[i3] = (Math.random() - 0.5) * 2600;
+        pos[i3 + 1] = (Math.random() - 0.5) * 2600;
+        pos[i3 + 2] = (Math.random() - 0.5) * 2200 - 450;
+
+        const rand = Math.random();
+        let c = (rand < 0.6) ? new THREE.Color(0xffffff) : (rand < 0.85 ? new THREE.Color(0xff75a0) : new THREE.Color(0x9d4edd));
+        col[i3] = c.r; col[i3 + 1] = c.g; col[i3 + 2] = c.b;
+      }
+
+      geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+      geo.setAttribute("color", new THREE.BufferAttribute(col, 3));
+
+      const mat = new THREE.PointsMaterial({
+        size: 3.2,
+        map: particleTex,
+        transparent: true,
+        opacity: 0.7,
+        vertexColors: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      });
+
+      starsPoints = new THREE.Points(geo, mat);
+      scene.add(starsPoints);
+    }
+    initStars();
+
+    /**
+     * ========================================================
+     * ASOSIY ZARRACHALAR TIZIMI VA FIZIKA BUFERLARI
+     * ========================================================
+     */
+    const N = CONFIG.particleCount;
+    const geometry = new THREE.BufferGeometry();
+
+    const currentPos = new Float32Array(N * 3);
+    const sourcePos = new Float32Array(N * 3);
+    const targetPos = new Float32Array(N * 3);
+
+    const currentCol = new Float32Array(N * 3);
+    const sourceCol = new Float32Array(N * 3);
+    const targetCol = new Float32Array(N * 3);
+
+    // Fizikaviy o'tish dinamikasi (portlash, aylanma tezlik, har bir zarrachaning o'z kuchi)
+    const velocities = new Float32Array(N * 3);
+    const delays = new Float32Array(N);
+    const swirlPhases = new Float32Array(N);
+
+    for (let i = 0; i < N; i++) {
+      delays[i] = Math.random() * 0.3;
+      swirlPhases[i] = Math.random() * Math.PI * 2;
+    }
+
+    geometry.setAttribute("position", new THREE.BufferAttribute(currentPos, 3));
+    geometry.setAttribute("color", new THREE.BufferAttribute(currentCol, 3));
+
+    const particlesMaterial = new THREE.PointsMaterial({
+      size: 4.6,
+      map: particleTex,
+      transparent: true,
+      opacity: 0.95,
+      vertexColors: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    });
+
+    const particleSystem = new THREE.Points(geometry, particlesMaterial);
+    scene.add(particleSystem);
+
+    /**
+     * ========================================================
+     * 1-BOSQICH: KONVERT VA "Sen uchun ❤️"
+     * ========================================================
+     */
+    function createEnvelopeStage() {
+      const pos = new Float32Array(N * 3);
+      const col = new Float32Array(N * 3);
+      let idx = 0;
+
+      // 1. "Sen uchun" matni (Aniq, chiroyli va o'qilishi oson)
+      const textPoints = getCanvasPoints("Sen uchun", 64, 400, 120);
+      const textPartCount = 7000;
+      for (let i = 0; i < textPartCount && idx < N; i++, idx++) {
+        const i3 = idx * 3;
+        const p = textPoints[i % textPoints.length];
+        pos[i3] = p.x - 45 + (Math.random() - 0.5) * 1.5;
+        pos[i3 + 1] = p.y + 130 + (Math.random() - 0.5) * 1.5;
+        pos[i3 + 2] = (Math.random() - 0.5) * 4;
+
+        // Oq yadro va och pushti neon jilo
+        const isCore = Math.random() < 0.7;
+        col[i3] = 1.0;
+        col[i3 + 1] = isCore ? 0.95 : 0.6;
+        col[i3 + 2] = isCore ? 0.98 : 0.8;
+      }
+
+      // 2. "Sen uchun" yozuvi yonidagi porloq Qizil Yurakcha Ikonkasi (❤️)
+      const heartIconCount = 3800;
+      for (let i = 0; i < heartIconCount && idx < N; i++, idx++) {
+        const i3 = idx * 3;
+        const t = Math.random() * Math.PI * 2;
+        const s = 1.45 * Math.sqrt(Math.random());
+
+        const hx = 16 * Math.pow(Math.sin(t), 3);
+        const hy = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
+
+        pos[i3] = hx * s + 135 + (Math.random() - 0.5) * 1.8;
+        pos[i3 + 1] = hy * s + 130 + (Math.random() - 0.5) * 1.8;
+        pos[i3 + 2] = (Math.random() - 0.5) * 10 + 6;
+
+        // Yorqin qizil neon
+        col[i3] = 1.0;
+        col[i3 + 1] = Math.random() < 0.2 ? 0.2 : 0.02;
+        col[i3 + 2] = 0.2;
+      }
+
+      // 3. Konvert ramkasi va qopqog'i
+      const envW = 280, envH = 180;
+      const borderPartCount = 5000;
+      for (let i = 0; i < borderPartCount && idx < N; i++, idx++) {
+        const i3 = idx * 3;
+        const r = Math.random();
+        let px = 0, py = 0;
+
+        if (r < 0.25) { px = (Math.random() - 0.5) * envW; py = envH / 2; }
+        else if (r < 0.5) { px = (Math.random() - 0.5) * envW; py = -envH / 2; }
+        else if (r < 0.65) { px = -envW / 2; py = (Math.random() - 0.5) * envH; }
+        else if (r < 0.8) { px = envW / 2; py = (Math.random() - 0.5) * envH; }
+        else if (r < 0.9) {
+          const t = Math.random();
+          px = -envW / 2 * (1 - t); py = envH / 2 * (1 - t) - 10 * t;
+        } else {
+          const t = Math.random();
+          px = envW / 2 * (1 - t); py = envH / 2 * (1 - t) - 10 * t;
+        }
+
+        pos[i3] = px + (Math.random() - 0.5) * 2;
+        pos[i3 + 1] = py - 8 + (Math.random() - 0.5) * 2;
+        pos[i3 + 2] = (Math.random() - 0.5) * 4;
+
+        // Pushti-binafsha konvert qirrasi
+        col[i3] = 0.95; col[i3 + 1] = 0.25; col[i3 + 2] = 0.7;
+      }
+
+      // 4. Konvert markazidagi 3D Qizil Yurakcha Muhr
+      const sealCount = 5500;
+      for (let i = 0; i < sealCount && idx < N; i++, idx++) {
+        const i3 = idx * 3;
+        const t = Math.random() * Math.PI * 2;
+        const s = 2.4 * Math.sqrt(Math.random());
+
+        const hx = 16 * Math.pow(Math.sin(t), 3);
+        const hy = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
+
+        pos[i3] = hx * s;
+        pos[i3 + 1] = hy * s - 18;
+        pos[i3 + 2] = (Math.random() - 0.5) * 14 + 12;
+
+        col[i3] = 0.95; col[i3 + 1] = 0.05; col[i3 + 2] = 0.15;
+      }
+
+      // 5. Atrofga sochilgan sehrli jilvalar
+      while (idx < N) {
+        const i3 = idx * 3;
+        const a = Math.random() * Math.PI * 2;
+        const rad = 160 + Math.random() * 150;
+        pos[i3] = Math.cos(a) * rad;
+        pos[i3 + 1] = Math.sin(a) * (rad * 0.65);
+        pos[i3 + 2] = (Math.random() - 0.5) * 80;
+
+        col[i3] = 0.6; col[i3 + 1] = 0.15; col[i3 + 2] = 0.8;
+        idx++;
+      }
+
+      return { positions: pos, colors: col };
+    }
+
+    /**
+     * ========================================================
+     * 2-BOSQICH: AYLONUVCHI GALAKTIKA VORTEKSI (Spiral Vortex)
+     * ========================================================
+     */
+    function createVortexStage() {
+      const pos = new Float32Array(N * 3);
+      const col = new Float32Array(N * 3);
+      const arms = 4;
+      const maxR = 390;
+
+      for (let i = 0; i < N; i++) {
+        const i3 = i * 3;
+        const arm = i % arms;
+        const armAngle = (arm * Math.PI * 2) / arms;
+
+        const p = Math.pow(Math.random(), 1.45);
+        const r = p * maxR;
+        const angle = r * 0.038 + armAngle;
+        const spread = (Math.random() - 0.5) * (20 + r * 0.18);
+
+        pos[i3] = Math.cos(angle) * r + Math.sin(angle) * spread;
+        pos[i3 + 1] = (Math.sin(angle) * r - Math.cos(angle) * spread) * 0.75;
+        pos[i3 + 2] = -Math.cos(p * Math.PI) * 80 + (Math.random() - 0.5) * (15 + r * 0.15);
+
+        if (r < 45) {
+          col[i3] = 1.0; col[i3 + 1] = 0.9; col[i3 + 2] = 0.7; // Oltin oq yadro
+        } else if (r < 180) {
+          col[i3] = 1.0; col[i3 + 1] = 0.1; col[i3 + 2] = 0.45; // Neon pushti
+        } else {
+          col[i3] = 0.55; col[i3 + 1] = 0.1; col[i3 + 2] = 0.95; // Chuqur binafsha
+        }
+      }
+      return { positions: pos, colors: col };
+    }
+
+    /**
+     * ========================================================
+     * 3-BOSQICH: "Josiya" NEON ISMI
+     * ========================================================
+     */
+    function createNameStage() {
+      const pos = new Float32Array(N * 3);
+      const col = new Float32Array(N * 3);
+
+      const namePoints = getCanvasPoints(CONFIG.recipientName, 105, 800, 220);
+      const namePartCount = Math.floor(N * 0.78);
+      let idx = 0;
+
+      for (let i = 0; i < namePartCount && idx < N; i++, idx++) {
+        const i3 = idx * 3;
+        const p = namePoints[i % namePoints.length];
+
+        pos[i3] = p.x + (Math.random() - 0.5) * 2;
+        pos[i3 + 1] = p.y + (Math.random() - 0.5) * 2;
+        pos[i3 + 2] = (Math.random() - 0.5) * 12;
+
+        const isCore = Math.random() < 0.5;
+        col[i3] = 1.0;
+        col[i3 + 1] = isCore ? 0.95 : 0.15;
+        col[i3 + 2] = isCore ? 0.95 : 0.5;
+      }
+
+      // Halqa va sochilgan uchqunlar
+      while (idx < N) {
+        const i3 = idx * 3;
+        const a = Math.random() * Math.PI * 2;
+        const rad = 240 + Math.random() * 130;
+
+        pos[i3] = Math.cos(a) * rad;
+        pos[i3 + 1] = Math.sin(a) * (rad * 0.45);
+        pos[i3 + 2] = (Math.random() - 0.5) * 70;
+
+        col[i3] = 0.85; col[i3 + 1] = 0.1; col[i3 + 2] = 0.6;
+        idx++;
+      }
+
+      return { positions: pos, colors: col };
+    }
+
+    /**
+     * ========================================================
+     * 4-BOSQICH: HAQIQIY MUKAMMAL 3D ATIRGUL (HYPER-REALISTIC ROSE)
+     * ========================================================
+     * Bu yerda gulbarglar tartibsiz nuqtalar emas, balki:
+     * - Aniq kavisli gulbarg yuzalari (smooth parametric curved petal surfaces)
+     * - Har bir gulbargning alohida QIRRASI (Rim / Edge Highlight)
+     * - Gulbarg ichi baxmal to'q yoqut qizil, qirralari esa yaltiroq neon pushti-oq jiloli
+     * - G'uncha, 4 qatlam gulbarglar, yashil kosachabarglar, poya va yonbarglar
+     * - Ostida mukammal "Josiya" ismi va nozik yurakcha
+     */
+    function createHyperRealisticRoseStage() {
+      const pos = new Float32Array(N * 3);
+      const col = new Float32Array(N * 3);
+      let idx = 0;
+
+      const roseCenterY = 55;
+      const roseTotalParticles = Math.floor(N * 0.74); // 22,200 zarracha faqat gulga!
+
+      // --- 1. G'uncha yadrosi (Tight Spiral Core) - 3,500 ta zarracha ---
+      const budCount = 3500;
+      for (let i = 0; i < budCount && idx < N; i++, idx++) {
+        const i3 = idx * 3;
+        const t = Math.random(); // 0 dan 1 gacha
+        const theta = t * Math.PI * 18; // Spiral o'ralish
+        const r = (3 + t * 22) * Math.sqrt(Math.random() * 0.75 + 0.25);
+        const y = roseCenterY - 10 + t * 40;
+
+        pos[i3] = Math.cos(theta) * r + (Math.random() - 0.5) * 1.2;
+        pos[i3 + 1] = y + (Math.random() - 0.5) * 1.2;
+        pos[i3 + 2] = Math.sin(theta) * r + (Math.random() - 0.5) * 1.2;
+
+        // Kurtak chuqur baxmal to'q qizil
+        col[i3] = 0.65 + t * 0.35;
+        col[i3 + 1] = 0.01 + t * 0.05;
+        col[i3 + 2] = 0.08 + t * 0.15;
+      }
+
+      // --- 2. Qatlam-qatlam Gulbarglar (Curved Layered Petals) - 13,000 ta zarracha ---
+      // Har bir qatlamdagi barglar soni, radiusi va tashqariga ochilish burchagi
+      const petalLayers = [
+        { count: 3, radius: 46,  height: 48, openAngle: 0.35, yOffset: 10, rimGlow: 0.7 },
+        { count: 5, radius: 76,  height: 42, openAngle: 0.65, yOffset: 4,  rimGlow: 0.8 },
+        { count: 6, radius: 110, height: 35, openAngle: 0.95, yOffset: -4, rimGlow: 0.9 },
+        { count: 7, radius: 145, height: 26, openAngle: 1.25, yOffset: -12, rimGlow: 1.0 }
+      ];
+
+      const petalsParticles = 13000;
+      for (let i = 0; i < petalsParticles && idx < N; i++, idx++) {
+        const i3 = idx * 3;
+        const layer = petalLayers[i % petalLayers.length];
+        const petalIdx = Math.floor(Math.random() * layer.count);
+        const baseAngle = (petalIdx * Math.PI * 2) / layer.count + (layer.count % 2 === 0 ? 0.3 : 0);
+
+        // Parametrlar: u - barg eni [-1, 1], v - barg balandligi [0, 1]
+        // Zarrachalarning 40% qismini atayin BARG QIRRASIGA (edge/rim) joylashtiramiz!
+        const isRim = Math.random() < 0.38;
+        let u, v;
+
+        if (isRim) {
+          // Barg qirrasi (tashqi kontur)
+          u = (Math.random() < 0.5 ? -1 : 1) * (0.8 + Math.random() * 0.2);
+          v = 0.2 + Math.random() * 0.8;
+        } else {
+          // Barg sirti
+          u = (Math.random() - 0.5) * 1.8;
+          v = Math.random();
+        }
+
+        // Barg profil shakli: asosi tor, o'rtasi keng, uchi kavisli
+        const widthShape = Math.sin(v * Math.PI) * (1 - 0.25 * Math.abs(u));
+        const theta = baseAngle + (u * 0.65 * widthShape * (Math.PI / layer.count) * 2.2);
+
+        // Barg radiusi va balandligi
+        const r = v * layer.radius * (0.8 + 0.2 * widthShape);
+        // Bargning pastga qayrilishi (kavis)
+        const curl = Math.pow(v, 2.2) * (layer.openAngle * 35);
+        const y = roseCenterY + layer.yOffset + (v * layer.height) - curl;
+
+        let px = Math.cos(theta) * r;
+        let py = y;
+        let pz = Math.sin(theta) * r;
+
+        // Nozik organik to'lqin
+        px += (Math.random() - 0.5) * 1.8;
+        py += (Math.random() - 0.5) * 1.8;
+        pz += (Math.random() - 0.5) * 1.8;
+
+        pos[i3] = px;
+        pos[i3 + 1] = py;
+        pos[i3 + 2] = pz;
+
+        // Ranglar: Agar bu BARG QIRRASI (rim) bo'lsa — neon porloq pushti-oq!
+        if (isRim || v > 0.88) {
+          col[i3] = 1.0;
+          col[i3 + 1] = 0.45 + 0.55 * (v > 0.9 ? 1 : 0);
+          col[i3 + 2] = 0.65 + 0.35 * (v > 0.9 ? 1 : 0);
+        } else {
+          // Barg ichki yuzasi — chuqur yoqut qizil
+          col[i3] = 0.85 + v * 0.15;
+          col[i3 + 1] = 0.02 + v * 0.1;
+          col[i3 + 2] = 0.12 + v * 0.25;
+        }
+      }
+
+      // --- 3. Kosachabarglar (Sepals) - 5 ta zumrad yashil nayzasimon barg - 2,200 zarracha ---
+      const sepalsCount = 2200;
+      for (let i = 0; i < sepalsCount && idx < N; i++, idx++) {
+        const i3 = idx * 3;
+        const sepalIdx = Math.floor(Math.random() * 5);
+        const angle = (sepalIdx * Math.PI * 2) / 5 + (Math.random() - 0.5) * 0.18;
+
+        const t = Math.random();
+        const r = t * 90;
+        const y = roseCenterY - 14 - Math.pow(t, 1.8) * 32;
+
+        pos[i3] = Math.cos(angle) * r + (Math.random() - 0.5) * 2;
+        pos[i3 + 1] = y + (Math.random() - 0.5) * 2;
+        pos[i3 + 2] = Math.sin(angle) * r + (Math.random() - 0.5) * 2;
+
+        col[i3] = 0.02 + t * 0.1;
+        col[i3 + 1] = 0.75 + t * 0.25;
+        col[i3 + 2] = 0.35 + t * 0.2;
+      }
+
+      // --- 4. Gul Poyasi va 2 ta Yashil Barg (Stem & Leaves) - 3,500 zarracha ---
+      const stemLeavesCount = 3500;
+      for (let i = 0; i < stemLeavesCount && idx < N; i++, idx++) {
+        const i3 = idx * 3;
+        const isLeaf = Math.random() < 0.55;
+
+        if (!isLeaf) {
+          // Poya (nozik silliq yashil chiziq)
+          const t = Math.random();
+          const y = (roseCenterY - 18) - t * 115;
+          const curveX = Math.sin(t * Math.PI) * 10;
+          const curveZ = Math.cos(t * Math.PI) * 6;
+          const th = Math.random() * Math.PI * 2;
+          const rad = Math.random() * 3.5;
+
+          pos[i3] = curveX + Math.cos(th) * rad;
+          pos[i3 + 1] = y;
+          pos[i3 + 2] = curveZ + Math.sin(th) * rad;
+
+          col[i3] = 0.05; col[i3 + 1] = 0.7; col[i3 + 2] = 0.3;
+        } else {
+          // Poyadagi 2 ta go'zal oval tishsimon barg
+          const side = Math.random() < 0.5 ? 1 : -1;
+          const u = Math.random();
+          const width = Math.sin(u * Math.PI) * 22 * (Math.random() * 0.8 + 0.2);
+          const originY = roseCenterY - 60 + side * 15;
+
+          const lx = side * (18 + u * 55) + (Math.random() - 0.5) * 2;
+          const ly = originY - u * 15 + (Math.random() - 0.5) * width;
+          const lz = side * 12 + (Math.random() - 0.5) * width;
+
+          pos[i3] = lx; pos[i3 + 1] = ly; pos[i3 + 2] = lz;
+
+          col[i3] = 0.08; col[i3 + 1] = 0.85; col[i3 + 2] = 0.4;
+        }
+      }
+
+      // --- 5. Ostidagi "Josiya" Ismi va Nozik Qizil Yurakcha (Qolgan barcha zarrachalar) ---
+      const namePoints = getCanvasPoints(CONFIG.recipientName, 65, 700, 140);
+      const nameBaseY = -120;
+
+      while (idx < N) {
+        const i3 = idx * 3;
+        const pick = Math.random();
+
+        if (pick < 0.82) {
+          // Ism
+          const p = namePoints[idx % namePoints.length];
+          pos[i3] = p.x + (Math.random() - 0.5) * 2;
+          pos[i3 + 1] = p.y + nameBaseY + (Math.random() - 0.5) * 2;
+          pos[i3 + 2] = (Math.random() - 0.5) * 10;
+
+          const isW = Math.random() < 0.6;
+          col[i3] = 1.0;
+          col[i3 + 1] = isW ? 0.95 : 0.2;
+          col[i3 + 2] = isW ? 0.95 : 0.5;
+        } else {
+          // Yurakcha
+          const t = Math.random() * Math.PI * 2;
+          const s = 1.15 * Math.sqrt(Math.random());
+          const hx = 16 * Math.pow(Math.sin(t), 3);
+          const hy = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
+
+          pos[i3] = hx * s;
+          pos[i3 + 1] = hy * s + nameBaseY - 38;
+          pos[i3 + 2] = (Math.random() - 0.5) * 8;
+
+          col[i3] = 1.0; col[i3 + 1] = 0.05; col[i3 + 2] = 0.2;
+        }
+        idx++;
+      }
+
+      return { positions: pos, colors: col };
+    }
+
+    /**
+     * MATNDAN ANIQ PIKSEL KOORDINATALARINI OLISH
+     */
+    function getCanvasPoints(text, size, maxW, maxH) {
+      const c = document.createElement("canvas");
+      c.width = maxW;
+      c.height = maxH;
+      const ctx = c.getContext("2d");
+
+      ctx.fillStyle = "#000";
+      ctx.fillRect(0, 0, maxW, maxH);
+
+      ctx.fillStyle = "#fff";
+      ctx.font = `bold ${size}px 'Cinzel', 'Playfair Display', serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(text, maxW / 2, maxH / 2);
+
+      const img = ctx.getImageData(0, 0, maxW, maxH).data;
+      const pts = [];
+      const step = 2;
+
+      for (let y = 0; y < maxH; y += step) {
+        for (let x = 0; x < maxW; x += step) {
+          if (img[(y * maxW + x) * 4] > 100) {
+            pts.push({ x: x - maxW / 2, y: -(y - maxH / 2) });
+          }
+        }
+      }
+      return pts.length > 0 ? pts : [{ x: 0, y: 0 }];
+    }
+
+    /**
+     * ========================================================
+     * BOSQICHLAR BAZASI VA O'TISH FIZIKASI
+     * ========================================================
+     */
+    const stages = [
+      createEnvelopeStage(),
+      createVortexStage(),
+      createNameStage(),
+      createHyperRealisticRoseStage()
+    ];
+
+    let currentStage = 0;
+    let isTransitioning = false;
+    let sequenceTimer = null;
+
+    // Boshlang'ich holatni o'rnatish
+    for (let i = 0; i < N * 3; i++) {
+      currentPos[i] = stages[0].positions[i];
+      sourcePos[i] = stages[0].positions[i];
+      targetPos[i] = stages[0].positions[i];
+
+      currentCol[i] = stages[0].colors[i];
+      sourceCol[i] = stages[0].colors[i];
+      targetCol[i] = stages[0].colors[i];
+    }
+    geometry.attributes.position.needsUpdate = true;
+    geometry.attributes.color.needsUpdate = true;
+
+    /**
+     * MUKAMMAL DINAMIK TRANZITSIYA (Explosion + Swirl + Easing)
+     */
+    let transitionTween = null;
+    const animState = { progress: 0 };
+
+    function transitionTo(nextStageIdx, duration = 3000, transitionType = "normal") {
+      if (nextStageIdx < 0 || nextStageIdx >= stages.length) return;
+      currentStage = nextStageIdx;
+
+      for (let i = 0; i < N * 3; i++) {
+        sourcePos[i] = currentPos[i];
+        targetPos[i] = stages[nextStageIdx].positions[i];
+
+        sourceCol[i] = currentCol[i];
+        targetCol[i] = stages[nextStageIdx].colors[i];
+      }
+
+      // Portlash va aylanma tezlik vektorlarini hisoblash
+      for (let i = 0; i < N; i++) {
+        const i3 = i * 3;
+        const angle = Math.random() * Math.PI * 2;
+        const force = 30 + Math.random() * 110;
+
+        // Radial portlash
+        velocities[i3] = Math.cos(angle) * force;
+        velocities[i3 + 1] = Math.sin(angle) * force;
+        velocities[i3 + 2] = (Math.random() - 0.5) * force;
+      }
+
+      if (transitionTween) transitionTween.stop();
+      animState.progress = 0;
+      isTransitioning = true;
+
+      transitionTween = new TWEEN.Tween(animState)
+        .to({ progress: 1 }, duration)
+        .easing(TWEEN.Easing.Cubic.InOut)
+        .onUpdate(() => {
+          const p = animState.progress;
+          // Portlash kuchi: p = 0.5 da maksimum, 0 va 1 da 0 bo'ladi
+          const burstFactor = Math.sin(p * Math.PI);
+
+          for (let i = 0; i < N; i++) {
+            const i3 = i * 3;
+            const d = delays[i];
+            let localP = (p - d) / (1 - d);
+            localP = Math.max(0, Math.min(1, localP));
+            const smoothP = localP * localP * (3 - 2 * localP);
+
+            // Silliq interpolyatsiya + dinamik vortex / explosion siljishi
+            const bX = velocities[i3] * burstFactor * 0.22;
+            const bY = velocities[i3 + 1] * burstFactor * 0.22;
+            const bZ = velocities[i3 + 2] * burstFactor * 0.22;
+
+            currentPos[i3] = sourcePos[i3] + (targetPos[i3] - sourcePos[i3]) * smoothP + bX;
+            currentPos[i3 + 1] = sourcePos[i3 + 1] + (targetPos[i3 + 1] - sourcePos[i3 + 1]) * smoothP + bY;
+            currentPos[i3 + 2] = sourcePos[i3 + 2] + (targetPos[i3 + 2] - sourcePos[i3 + 2]) * smoothP + bZ;
+
+            currentCol[i3] = sourceCol[i3] + (targetCol[i3] - sourceCol[i3]) * smoothP;
+            currentCol[i3 + 1] = sourceCol[i3 + 1] + (targetCol[i3 + 1] - sourceCol[i3 + 1]) * smoothP;
+            currentCol[i3 + 2] = sourceCol[i3 + 2] + (targetCol[i3 + 2] - sourceCol[i3 + 2]) * smoothP;
+          }
+          geometry.attributes.position.needsUpdate = true;
+          geometry.attributes.color.needsUpdate = true;
+        })
+        .onComplete(() => {
+          isTransitioning = false;
+          if (nextStageIdx === 3) {
+            document.getElementById("replay-box").classList.add("active");
+          }
+        })
+        .start();
+    }
+
+    /**
+     * SSENARIYNI TO'LIQ KETMA-KET ISHGA TUSHIRISH
+     */
+    function startExperience() {
+      document.getElementById("action-wrapper").classList.add("hidden");
+      document.getElementById("replay-box").classList.remove("active");
+
+      startSound();
+
+      // 1 ➔ 2-bosqich: Vorteks (zarrachalar portlab aylanadi)
+      transitionTo(1, 2600);
+
+      if (sequenceTimer) clearTimeout(sequenceTimer);
+      // 2 ➔ 3-bosqich: Vorteksdan "Josiya" ismi shakllanadi (3.8s dan so'ng)
+      sequenceTimer = setTimeout(() => {
+        transitionTo(2, 3000);
+
+        // 3 ➔ 4-bosqich: Ism ustida haqiqiy 3D Atirgul gullab ochiladi (4.2s dan so'ng)
+        sequenceTimer = setTimeout(() => {
+          transitionTo(3, 3400);
+        }, 4200);
+
+      }, 3800);
+    }
+
+    /**
+     * ========================================================
+     * WEB AUDIO AMBIENT ARPEJIO
+     * ========================================================
+     */
+    let audioCtx = null;
+    let isMuted = false;
+    let synthRunning = false;
+    const bgAudioEl = document.getElementById("bg-audio");
+
+    function initAudio() {
+      if (audioCtx) return;
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (AudioContextClass) audioCtx = new AudioContextClass();
+    }
+
+    const chords = [
+      [261.63, 329.63, 392.00, 523.25], // C Maj
+      [220.00, 261.63, 329.63, 440.00], // A Min
+      [174.61, 220.00, 261.63, 349.23], // F Maj
+      [196.00, 246.94, 293.66, 392.00]  // G Maj
+    ];
+    let chIdx = 0, noteIdx = 0;
+
+    function playArpeggio() {
+      if (!audioCtx || isMuted || synthRunning) return;
+      synthRunning = true;
+
+      setInterval(() => {
+        if (isMuted || !audioCtx) return;
+        if (audioCtx.state === "suspended") audioCtx.resume();
+
+        const chord = chords[chIdx];
+        const freq = chord[noteIdx % chord.length];
+
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+        gain.gain.setValueAtTime(0.001, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.08, audioCtx.currentTime + 0.1);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 1.8);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start();
+        osc.stop(audioCtx.currentTime + 1.9);
+
+        noteIdx++;
+        if (noteIdx % 4 === 0) chIdx = (chIdx + 1) % chords.length;
+      }, 430);
+    }
+
+    function startSound() {
+      initAudio();
+      if (CONFIG.audioUrl) {
+        bgAudioEl.src = CONFIG.audioUrl;
+        bgAudioEl.play().catch(() => playArpeggio());
+      } else {
+        playArpeggio();
+      }
+    }
+
+    document.getElementById("mute-btn").addEventListener("click", () => {
+      isMuted = !isMuted;
+      const btn = document.getElementById("mute-btn");
+      if (isMuted) {
+        btn.style.opacity = "0.35";
+        bgAudioEl.pause();
+      } else {
+        btn.style.opacity = "1";
+        startSound();
+      }
+    });
+
+    /**
+     * ========================================================
+     * ASOSIY RENDER HALQASI (60 FPS)
+     * ========================================================
+     */
+    const clock = new THREE.Clock();
+
+    function render() {
+      requestAnimationFrame(render);
+      const elapsed = clock.getElapsedTime();
+      TWEEN.update();
+
+      // Kamera parallaks harakati
+      mouse.x += (mouse.targetX - mouse.x) * 0.05;
+      mouse.y += (mouse.targetY - mouse.y) * 0.05;
+
+      camera.position.x = mouse.x;
+      camera.position.y = -mouse.y;
+      camera.lookAt(0, 0, 0);
+
+      // Yulduzlar aylanishi
+      if (starsPoints) {
+        starsPoints.rotation.y = elapsed * 0.016;
+        starsPoints.rotation.x = elapsed * 0.008;
+      }
+
+      // Bosqich animatsiyalari
+      if (!isTransitioning) {
+        if (currentStage === 1) {
+          // Vorteks aylanadi
+          particleSystem.rotation.z = elapsed * 0.38;
+          particleSystem.rotation.y = Math.sin(elapsed * 0.5) * 0.2;
+        } else if (currentStage === 3) {
+          // 4-BOSQICH: ATIRGULNING NAFAS OLISHI (Breathing & Wind Flutter)
+          const breath = 1.0 + Math.sin(elapsed * 2.2) * 0.038;
+          particleSystem.scale.set(breath, breath, breath);
+
+          particleSystem.rotation.y = Math.sin(elapsed * 0.6) * 0.16;
+          particleSystem.rotation.x = Math.cos(elapsed * 0.7) * 0.08;
+          particleSystem.rotation.z = Math.sin(elapsed * 0.4) * 0.03;
+        } else {
+          particleSystem.scale.set(1, 1, 1);
+          particleSystem.rotation.y = Math.sin(elapsed * 0.5) * 0.06;
+          particleSystem.rotation.x = Math.cos(elapsed * 0.4) * 0.04;
+          particleSystem.rotation.z = 0;
+        }
+      } else {
+        particleSystem.rotation.z *= 0.94;
+      }
+
+      renderer.render(scene, camera);
+    }
+    render();
+
+    /**
+     * HODISALAR
+     */
+    document.getElementById("open-btn").addEventListener("click", startExperience);
+
+    document.getElementById("replay-btn").addEventListener("click", () => {
+      document.getElementById("replay-box").classList.remove("active");
+      document.getElementById("action-wrapper").classList.remove("hidden");
+      if (sequenceTimer) clearTimeout(sequenceTimer);
+      transitionTo(0, 2000);
+    });
+
+  </script>
+</body>
+</html>
