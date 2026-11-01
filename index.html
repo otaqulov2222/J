@@ -48,7 +48,7 @@
       display: block;
     }
 
-    /* Orqa fondagi xira, nafis "03.04.2026" sanasi (Ambient Watermark) */
+    /* Orqa fondagi bitta yagona xira, nafis "03.04.2026" sanasi */
     .bg-date-layer {
       position: fixed;
       top: 50%;
@@ -60,35 +60,35 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      transition: opacity 1.5s cubic-bezier(0.16, 1, 0.3, 1), transform 1.5s ease;
-      opacity: 0.18;
+      transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s ease;
+      opacity: 0.15;
       width: 100%;
     }
 
     .bg-date-layer.hidden {
       opacity: 0;
-      transform: translate(-50%, -50%) scale(1.15);
+      transform: translate(-50%, -50%) scale(1.1);
     }
 
     .date-display {
       font-family: 'Cinzel', serif;
-      font-size: clamp(38px, 9vw, 92px);
+      font-size: clamp(34px, 8.5vw, 84px);
       font-weight: 800;
-      letter-spacing: clamp(6px, 2.5vw, 24px);
+      letter-spacing: clamp(6px, 2vw, 18px);
       color: #ff9ecb;
-      text-shadow: 0 0 40px rgba(255, 105, 180, 0.6),
-                   0 0 90px rgba(138, 43, 226, 0.4);
+      text-shadow: 0 0 30px rgba(255, 105, 180, 0.5),
+                   0 0 70px rgba(138, 43, 226, 0.3);
       white-space: nowrap;
       animation: subtlePulse 4s infinite ease-in-out;
     }
 
     @keyframes subtlePulse {
       0%, 100% {
-        opacity: 0.7;
-        filter: blur(1px);
+        opacity: 0.65;
+        filter: blur(0.5px);
       }
       50% {
-        opacity: 1;
+        opacity: 0.95;
         filter: blur(0px);
       }
     }
@@ -127,7 +127,7 @@
       pointer-events: none;
     }
 
-    /* Yuqori Darajadagi Professional Neon "BOSING" Tugmasi */
+    /* Professional Neon "BOSING" Tugmasi */
     .neon-btn {
       position: relative;
       min-width: 260px;
@@ -282,7 +282,7 @@
 </head>
 <body>
 
-  <!-- Orqa fonda xira, sirli bilinib turuvchi "03.04.2026" sanasi -->
+  <!-- Yagona, nafis va xira "03.04.2026" sanasi -->
   <div class="bg-date-layer" id="bg-date">
     <div class="date-display">03.04.2026</div>
   </div>
@@ -324,8 +324,7 @@
   <script>
     const CONFIG = {
       recipientName: "Josiya",
-      specialDate: "03.04.2026",
-      particleCount: 34000, // 34,000 ta zarrachalar (sana, konvert va butun koinot uchun)
+      particleCount: 32000,
       starCount: 2600,
       audioUrl: ""
     };
@@ -370,7 +369,7 @@
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    renderer.setClearColor(0x000000, 0); // Shaffof orqa fon (CSS gradient va sanani ko'rsatish uchun)
+    renderer.setClearColor(0x000000, 0);
 
     /**
      * SICHQONCHA, TOUCH VA GYRO-TILT
@@ -523,9 +522,10 @@
 
     /**
      * ========================================================
-     * 1-BOSQICH: KONVERT, "Sen uchun ❤️",
-     * ORQA FONDA XIRA "03.04.2026" ZARRACHALARI
+     * 1-BOSQICH: KONVERT, "Sen uchun ❤️"
      * VA BUTUN EKRANGA SOCHILGAN KOSMIK NUR
+     * (Duplicate bo'lmasligi uchun sana faqat fondagi bitta
+     * nafis qatlamda saqlanadi, zarrachalarda takrorlanmaydi!)
      * ========================================================
      */
     function createEnvelopeStage() {
@@ -549,7 +549,7 @@
         col[i3 + 2] = isCore ? 0.98 : 0.75;
       }
 
-      // 2. "Sen uchun" yozuvi yonidagi porloq Qizil Yurakcha Ikonkasi (❤️)
+      // 2. "Sen uchun" yozuvi yonidagi porloq Qizil Yurakcha Ikonkasi (❤️) (4,000 zarracha)
       const topHeartCount = 4000;
       for (let i = 0; i < topHeartCount && idx < N; i++, idx++) {
         const i3 = idx * 3;
@@ -612,30 +612,12 @@
         col[i3] = 0.96; col[i3 + 1] = 0.04; col[i3 + 2] = 0.16;
       }
 
-      // 5. ORQA FONDA XIRA, BILINAR-BILINMAS "03.04.2026" 3D ZARRACHALARI (3,500 zarracha)
-      // Konvert orqasida (Z = -120), xira mayin binafsha-pushti nurlanadi
-      const datePoints = getCanvasPoints(CONFIG.specialDate, 72, 600, 160);
-      const datePartCount = 3500;
-      for (let i = 0; i < datePartCount && idx < N; i++, idx++) {
-        const i3 = idx * 3;
-        const p = datePoints[i % datePoints.length];
-
-        pos[i3] = p.x + (Math.random() - 0.5) * 3;
-        pos[i3 + 1] = p.y - 12 + (Math.random() - 0.5) * 3;
-        pos[i3 + 2] = -120 + (Math.random() - 0.5) * 15; // Orqa fonda chuqurlikda
-
-        // Xiraroq, mayin pushti-binafsha nur
-        col[i3] = 0.45;
-        col[i3 + 1] = 0.12;
-        col[i3 + 2] = 0.45;
-      }
-
-      // 6. BUTUN EKRAN BO'YLAB SOCHILGAN KOSMIK ZARRACHALAR (Qolgan 8,000+ zarracha)
+      // 5. BUTUN EKRAN BO'YLAB KOSMIK NUR VA YULDUZLAR (Qolgan barcha zarrachalar)
       while (idx < N) {
         const i3 = idx * 3;
         const sub = Math.random();
 
-        if (sub < 0.65) {
+        if (sub < 0.68) {
           // Keng butun ekran maydoni bo'ylab
           pos[i3] = (Math.random() - 0.5) * 1400;
           pos[i3 + 1] = (Math.random() - 0.5) * 1100;
@@ -652,7 +634,7 @@
             col[i3] = 0.05; col[i3 + 1] = 0.85; col[i3 + 2] = 0.8;
           }
         } else {
-          // Konvert atrofidagi nurli aura
+          // Konvert atrofidagi mayin sehrli aura
           const angle = Math.random() * Math.PI * 2;
           const radius = 170 + Math.random() * 380;
           pos[i3] = Math.cos(angle) * radius + (Math.random() - 0.5) * 50;
@@ -972,7 +954,6 @@
     let isTransitioning = false;
     let sequenceTimer = null;
 
-    // Boshlang'ich shakl
     for (let i = 0; i < N * 3; i++) {
       currentPos[i] = stages[0].positions[i];
       sourcePos[i] = stages[0].positions[i];
@@ -1059,7 +1040,7 @@
       document.getElementById("action-wrapper").classList.add("hidden");
       document.getElementById("replay-box").classList.remove("active");
 
-      // Orqa fondagi "03.04.2026" sanasini silliq yo'qotish (fade out)
+      // Orqa fondagi yagona "03.04.2026" sanasini silliq yo'qotish
       const bgDate = document.getElementById("bg-date");
       if (bgDate) bgDate.classList.add("hidden");
 
