@@ -1,0 +1,12 @@
+{
+  "name": "j-particles",
+  "version": "1.0.0",
+  "description": "Sen uchun - 3D Particles Experience",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
